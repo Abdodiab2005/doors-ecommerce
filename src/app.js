@@ -9,11 +9,29 @@ const expressEjsLayouts = require("express-ejs-layouts");
 const notFoundHandler = require("./middlewares/notFound");
 const errorHandler = require("./middlewares/errorHandler");
 const setLocals = require("./middlewares/locals");
+const globalSettings = require("./middlewares/setting.middleware");
 
 const app = express();
 
 // --- 1. Middlewares ---
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "img-src": [
+          "'self'",
+          "data:",
+          "loremflickr.com",
+          "via.placeholder.com",
+          "picsum.photos",
+          "fastly.picsum.photos",
+        ],
+        "script-src": ["'self'", "'unsafe-inline'"],
+      },
+    },
+  })
+);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -27,9 +45,9 @@ app.use(expressEjsLayouts);
 app.use(setLocals);
 
 // --- 3. Routes ---
+app.use(globalSettings);
 app.use("/", require("./routes/home.routes"));
-app.use("/category", require("./routes/category.routes"));
-app.use("/product", require("./routes/product.routes"));
+app.use("/products", require("./routes/product.routes"));
 
 // --- 4. Error Handling ---
 // 404 Handler

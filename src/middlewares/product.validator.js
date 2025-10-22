@@ -1,0 +1,22 @@
+const { query, param, validationResult } = require("express-validator");
+const AppError = require("../utils/AppError");
+
+exports.validateProductId = [
+  param("id").isMongoId().withMessage("Invalid product ID format"),
+];
+
+exports.validateCategoryQuery = [
+  query("category")
+    .optional()
+    .isIn(["main", "inner"])
+    .withMessage("Invalid category name specified"),
+];
+
+exports.checkValidation = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const errorMessage = errors.array()[0].msg;
+    return next(new AppError(errorMessage, 400));
+  }
+  next();
+};

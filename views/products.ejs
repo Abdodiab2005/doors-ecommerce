@@ -1,0 +1,132 @@
+<style>
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .product-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  .product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  .product-card-content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-card-content h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+  .product-card-content .price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  .product-card-content .category {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 15px;
+  }
+  .product-card-content .description {
+    font-size: 0.9rem;
+    color: #555;
+    flex-grow: 1;
+    margin-bottom: 15px;
+  }
+  .product-card-content a {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: auto;
+  }
+  .pagination {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1rem;
+  }
+  .pagination a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+  }
+  .pagination span {
+    margin: 0 10px;
+  }
+</style>
+
+<div class="container" style="padding-top: 20px">
+  <h1 style="text-align: center"><%= title %></h1>
+  <p style="text-align: center; color: #555"><%= description %></p>
+
+  <% if (!products || products.length === 0) { %>
+  <p style="text-align: center; font-size: 1.2rem; color: #888">
+    No products found matching your criteria.
+  </p>
+  <% } else { %>
+
+  <div class="product-grid">
+    <% products.forEach(product => { %>
+    <div class="product-card">
+      <% if (product.images && product.images.length > 0) { %>
+      <img src="<%= product.images[0] %>" alt="<%= product.name %>" />
+      <% } else { %>
+      <img
+        src="https://via.placeholder.com/300x200?text=No+Image"
+        alt="No Image"
+      />
+      <% } %>
+
+      <div class="product-card-content">
+        <h3><%= product.name %></h3>
+        <p class="price">$<%= product.price.toFixed(2) %></p>
+        <p class="category">Category: <%= product.category %></p>
+
+        <p class="description">
+          <%= product.description.substring(0, 100) %>...
+        </p>
+
+        <a href="/products/<%= product._id %>">View Details</a>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+
+  <div class="pagination">
+    <% let baseQuery = currentCategory ? `&category=${currentCategory}` : '' %>
+    <% if (currentPage > 1) { %>
+    <a href="/products?page=<%= currentPage - 1 %><%= baseQuery %>">
+      &laquo; Previous
+    </a>
+    <% } %>
+
+    <span>Page <%= currentPage %> of <%= totalPages %></span>
+
+    <% if (currentPage < totalPages) { %>
+    <a href="/products?page=<%= currentPage + 1 %><%= baseQuery %>">
+      Next &raquo;
+    </a>
+    <% } %>
+  </div>
+
+  <% } %>
+</div>

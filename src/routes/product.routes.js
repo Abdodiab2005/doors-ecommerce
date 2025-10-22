@@ -1,11 +1,24 @@
 const router = require("express").Router();
+const productController = require("../controllers/product.controller");
+const paginationMiddleware = require("../middlewares/pagination.middleware");
+const {
+  validateProductId,
+  checkValidation,
+  validateCategoryQuery,
+} = require("../middlewares/product.validator");
 
-router.get("/", (req, res) => {
-  res.render("index", {
-    layout: "layout/main",
-    title: "Products",
-    description: "Products Page",
-  });
-});
+router.get(
+  "/",
+  paginationMiddleware,
+  validateCategoryQuery,
+  checkValidation,
+  productController.getAllProducts
+);
+router.get(
+  "/:id",
+  validateProductId,
+  checkValidation,
+  productController.getProductById
+);
 
 module.exports = router;

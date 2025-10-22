@@ -1,0 +1,108 @@
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div
+    class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4"
+  >
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2">
+      <img src="<%= settings?.logo %>" alt="Logo" class="h-10 w-auto" />
+      <span class="text-lg font-semibold text-gray-800 hidden sm:block"
+        >DoorShop</span
+      >
+    </a>
+
+    <!-- Search Bar -->
+    <div class="flex-1 mx-4 hidden md:block">
+      <div class="relative">
+        <input
+          type="text"
+          placeholder="ابحث عن باب..."
+          class="w-full rounded-full border border-gray-300 py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
+        />
+        <svg
+          class="absolute left-3 top-2.5 w-5 h-5 text-gray-500"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div x-data="{ open: false }" class="relative">
+      <!-- Desktop -->
+      <nav class="hidden md:flex items-center gap-6 text-gray-700 font-medium">
+        <a href="/" class="hover:text-black">الرئيسية</a>
+        <a href="/products?category=inner" class="hover:text-black"
+          >الأبواب الداخلية</a
+        >
+        <a href="/products?category=main" class="hover:text-black"
+          >الأبواب الخارجية</a
+        >
+        <a href="/#contact" class="hover:text-black">تواصل معنا</a>
+      </nav>
+
+      <!-- Mobile menu button -->
+      <button @click="open = !open" class="md:hidden focus:outline-none">
+        <svg
+          x-show="!open"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+        <svg
+          x-show="open"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+
+      <!-- Mobile Menu -->
+      <div
+        x-show="open"
+        x-transition
+        class="absolute right-0 mt-3 w-48 bg-white border border-gray-200 rounded-lg shadow-md py-2 md:hidden"
+      >
+        <a href="/" class="block px-4 py-2 hover:bg-gray-100">الرئيسية</a>
+        <a
+          href="/products?category=inner"
+          class="block px-4 py-2 hover:bg-gray-100"
+          >الأبواب الداخلية</a
+        >
+        <a
+          href="/products?category=main"
+          class="block px-4 py-2 hover:bg-gray-100"
+          >الأبواب الخارجية</a
+        >
+        <a href="/#contact" class="block px-4 py-2 hover:bg-gray-100"
+          >تواصل معنا</a
+        >
+      </div>
+    </div>
+  </div>
+</header>

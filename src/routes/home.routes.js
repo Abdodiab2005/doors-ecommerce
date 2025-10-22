@@ -1,11 +1,6 @@
 const router = require("express").Router();
+const homeController = require("../controllers/home.controller");
 
-router.get("/", (req, res) => {
-  res.render("index", {
-    layout: "layout/main",
-    title: "Home",
-    description: "Home Page",
-  });
-});
+router.get("/", homeController.renderHome);
 
 module.exports = router;
