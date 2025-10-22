@@ -1,0 +1,17 @@
+<main
+  class="min-h-screen flex flex-col items-center justify-center bg-[#DED9D3] text-center text-[#242425] px-4"
+>
+  <h1 class="text-6xl font-bold mb-4"><%= statusCode || 500 %></h1>
+  <h2 class="text-2xl font-semibold mb-2">
+    <%= message || 'Something went wrong' %>
+  </h2>
+  <p class="text-[#ACA59B] mb-6">
+    <%= description || 'We’re sorry, but an unexpected error occurred.' %>
+  </p>
+  <a
+    href="/"
+    class="px-6 py-3 bg-black text-white rounded-lg hover:bg-[#242425] transition"
+  >
+    Back to Home
+  </a>
+</main>
