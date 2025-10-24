@@ -36,6 +36,7 @@ app.use(
           "cdn.tailwindcss.com",
           "'unsafe-eval'",
         ],
+        connectSrc: ["'self'", "https://cdn.jsdelivr.net"],
       },
     },
   })
@@ -71,6 +72,7 @@ app.use("/", require("./routes/home.routes"));
 app.use("/products", require("./routes/product.routes"));
 app.use("/admin", require("./routes/admin.routes"));
 app.use("/admin", require("./routes/auth.routes"));
+app.use("/admin", require("./routes/settings.routes"));
 
 // --- 4. Error Handling ---
 // 404 Handler

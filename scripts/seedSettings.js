@@ -9,7 +9,7 @@ dotenv.config();
 // [!!] الداتا الافتراضية (مطابقة للموديل الجديد)
 const defaultSettings = {
   configIdentifier: "main_settings", // [!!] المفتاح
-  logo: "/images/logo-default.png",
+  logo: "/images/logo.jpg",
   favicon: "/images/favicon.ico",
   contactEmail: "info@doorshop.com",
   phoneNumber: "+02 123 456 7890",

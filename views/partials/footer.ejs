@@ -1,68 +1,99 @@
-<footer id="contact" class="bg-[#242425] text-[#DED9D3] mt-16">
-  <div
-    class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8"
-  >
-    <!-- Logo and About -->
-    <div>
-      <img src="<%= settings?.logo %>" alt="Logo" class="h-10 mb-4" />
-      <p class="text-sm leading-relaxed text-[#ACA59B]">
-        متجر متخصص في عرض أفضل أنواع الأبواب الداخلية والخارجية بأجود الخامات
-        والتصميمات العصرية.
-      </p>
-    </div>
+<footer class="bg-[#1E1E1F] text-[#DED9D3] mt-20 pt-14">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid gap-10 md:grid-cols-3">
+      <!-- Logo + About -->
+      <div>
+        <img src="<%= settings?.logo %>" alt="Logo" class="h-12 mb-4" />
+        <p class="text-sm leading-relaxed text-[#AAA8A3]">
+          متجر متخصص في عرض أفضل أنواع الأبواب الداخلية والخارجية بأجود الخامات
+          والتصميمات العصرية.
+        </p>
 
-    <!-- Quick Links -->
-    <div>
-      <h3 class="text-lg font-semibold mb-3 text-white">روابط سريعة</h3>
-      <ul class="space-y-2 text-sm">
-        <li><a href="/" class="hover:text-white">الرئيسية</a></li>
-        <li>
-          <a href="/products?category=inner" class="hover:text-white"
-            >الأبواب الداخلية</a
-          >
-        </li>
-        <li>
-          <a href="/products?category=main" class="hover:text-white"
-            >الأبواب الخارجية</a
-          >
-        </li>
-      </ul>
-    </div>
-
-    <!-- Contact Info -->
-    <div>
-      <h3 class="text-lg font-semibold mb-3 text-white">تواصل معنا</h3>
-      <ul class="space-y-2 text-sm">
-        <li>
-          📧
-          <a
-            href="mailto:<%= settings?.contactEmail %>"
-            class="hover:text-white"
-            ><%= settings?.contactEmail %></a
-          >
-        </li>
-        <li>
-          📞
-          <a href="tel:<%= settings?.phoneNumber %>" class="hover:text-white"
-            ><%= settings?.phoneNumber %></a
-          >
-        </li>
-        <li>
-          💬
+        <!-- Social -->
+        <div class="flex gap-4 mt-6">
+          <a href="#" class="hover:text-white transition">
+            <i class="fa-brands fa-facebook-f text-lg"></i>
+          </a>
+          <a href="#" class="hover:text-white transition">
+            <i class="fa-brands fa-instagram text-lg"></i>
+          </a>
           <a
             href="https://wa.me/<%= settings?.whatsappNumber %>"
             target="_blank"
-            class="hover:text-white"
-            >واتساب</a
+            class="hover:text-white transition"
           >
-        </li>
-      </ul>
-    </div>
-  </div>
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+          </a>
+        </div>
+      </div>
 
-  <div
-    class="border-t border-[#ACA59B]/20 mt-6 pt-4 text-center text-sm text-[#ACA59B]"
-  >
-    <p>© <%= new Date().getFullYear() %> DoorShop. جميع الحقوق محفوظة.</p>
+      <!-- Links -->
+      <div class="grid grid-cols-2 gap-8 md:gap-6">
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-white">روابط سريعة</h3>
+          <ul class="space-y-3 text-sm">
+            <li>
+              <a href="/" class="hover:text-white transition">الرئيسية</a>
+            </li>
+            <li>
+              <a
+                href="/products?category=inner"
+                class="hover:text-white transition"
+                >الأبواب الداخلية</a
+              >
+            </li>
+            <li>
+              <a
+                href="/products?category=main"
+                class="hover:text-white transition"
+                >الأبواب الخارجية</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Contact -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-white">تواصل معنا</h3>
+          <ul class="space-y-4 text-sm">
+            <li class="flex gap-3 items-center">
+              <i class="fa-solid fa-envelope"></i>
+              <a
+                href="mailto:<%= settings?.contactEmail %>"
+                class="hover:text-white"
+              >
+                <%= settings?.contactEmail %>
+              </a>
+            </li>
+            <li class="flex gap-3 items-center">
+              <i class="fa-solid fa-phone"></i>
+              <a
+                href="tel:<%= settings?.phoneNumber %>"
+                class="hover:text-white"
+              >
+                <%= settings?.phoneNumber %>
+              </a>
+            </li>
+            <li class="flex gap-3 items-center">
+              <i class="fa-brands fa-whatsapp"></i>
+              <a
+                href="https://wa.me/<%= settings?.whatsappNumber %>"
+                target="_blank"
+                class="hover:text-white"
+              >
+                واتساب
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div
+      class="border-t border-[#ACA59B]/20 mt-10 py-4 text-center text-xs text-[#85817A]"
+    >
+      © <%= new Date().getFullYear() %> DoorShop — جميع الحقوق محفوظة
+    </div>
   </div>
 </footer>

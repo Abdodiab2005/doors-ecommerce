@@ -21,4 +21,10 @@ router.get(
   productController.getProductById
 );
 
+router.get(
+  "/api/suggest",
+  paginationMiddleware,
+  productController.getSuggestions
+);
+
 module.exports = router;

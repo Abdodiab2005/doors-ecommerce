@@ -1,10 +1,11 @@
 <header
-  x-data="{ open: false, scrolled: false }"
+  x-data="{ scrolled: false }"
   @scroll.window="scrolled = window.scrollY > 100"
   :class="scrolled 
     ? 'bg-white/95 shadow-sm backdrop-blur-md text-gray-800' 
-    : 'bg-transparent text-white'"
+    : 'bg-transparent text-primary'"
   class="fixed top-0 left-0 w-full h-[72px] z-50 flex items-center transition-all duration-500 ease-in-out"
+  dir="rtl"
 >
   <div
     class="max-w-7xl mx-auto flex items-center justify-between w-full px-4 md:px-6"
@@ -14,7 +15,8 @@
       <img
         src="<%= settings?.logo %>"
         alt="Logo"
-        class="h-9 w-auto transition-transform duration-300 group-hover:scale-105"
+        class="h-9 w-auto transition-transform duration-300 group-hover:scale-105 rounded-full"
+        onerror="this.src='https://placehold.co/40x40/f87171/white?text=Logo';"
       />
       <span
         class="text-lg font-semibold tracking-tight transition-colors duration-300"
@@ -22,17 +24,20 @@
       >
     </a>
 
-    <!-- Search -->
-    <div class="flex-1 mx-4 hidden md:block">
-      <div class="relative">
-        <input
-          type="text"
-          placeholder="ابحث عن باب..."
-          class="w-full rounded-full border border-gray-300/50 py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/70 bg-white/10 backdrop-blur-sm text-inherit transition-all"
-          :class="scrolled ? 'bg-white text-gray-800 placeholder-gray-500' : 'bg-white/10 text-white placeholder-white/70 border-white/40'"
-        />
+    <div
+      x-data="searchModal()"
+      @keydown.ctrl.k.prevent.window="openSearch()"
+      @keydown.escape.window="closeSearch()"
+      class="flex-1 mx-4"
+    >
+      <button
+        @click.prevent="openSearch()"
+        aria-label="Open Search (Ctrl+K)"
+        class="relative p-2 rounded-full transition-colors"
+        :class="scrolled ? 'text-gray-800 hover:bg-gray-100' : 'text-white hover:bg-white/10'"
+      >
         <svg
-          class="absolute left-3 top-2.5 w-5 h-5"
+          class="w-5 h-5"
           fill="none"
           stroke="currentColor"
           stroke-width="2"
@@ -42,11 +47,220 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
+          ></path>
         </svg>
+      </button>
+
+      <div
+        x-show="isSearchOpen"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 bg-black/50 backdrop-blur-sm"
+        style="display: none"
+      >
+        <div
+          @click.away="closeSearch()"
+          class="relative w-full max-w-lg bg-white rounded-lg shadow-xl"
+        >
+          <button
+            @click.prevent="closeSearch()"
+            class="absolute -top-2 -right-2 w-8 h-8 flex items-center justify-center bg-gray-600 hover:bg-gray-800 text-white rounded-full z-10 transition-colors"
+            aria-label="Close search modal"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+
+          <div>
+            <form action="/products" method="GET" class="relative w-full">
+              <input
+                type="text"
+                name="q"
+                placeholder="ابحث عن باب..."
+                class="w-full rounded-t-lg border border-gray-300 py-4 pl-12 pr-20 text-lg text-gray-800 placeholder-gray-500 bg-white focus:outline-none focus:ring-2 focus:ring-primary/70"
+                x-ref="searchInput"
+                x-model="searchQuery"
+                @input.debounce.300ms="getSuggestions()"
+              />
+
+              <div
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400"
+              >
+                <svg
+                  class="w-full h-full"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </div>
+
+              <button
+                type="button"
+                x-show="searchQuery.length > 0"
+                @click.prevent="clearSearch()"
+                class="absolute right-12 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400 hover:text-gray-600"
+                aria-label="Clear search input"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+
+              <button type="submit" class="hidden" aria-label="Submit search">
+                Search
+              </button>
+            </form>
+          </div>
+
+          <div class="p-2 max-h-72 overflow-y-auto">
+            <div
+              x-show="isLoading"
+              class="flex justify-center items-center p-4"
+            >
+              <svg
+                class="animate-spin h-5 w-5 text-primary"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            </div>
+
+            <template x-for="suggestion in suggestions" :key="suggestion._id">
+              <a
+                :href="'/products/' + suggestion._id"
+                @click.prevent="navigateToSuggestion(suggestion)"
+                class="block px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <span x-text="suggestion.name"></span>
+              </a>
+            </template>
+
+            <div
+              x-show="!isLoading && searchQuery.length > 0 && suggestions.length === 0"
+              class="p-4 text-center text-gray-500"
+            >
+              لا توجد نتائج مطابقة لـ "<span x-text="searchQuery"></span>"
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <script>
+          function searchModal() {
+            return {
+              isSearchOpen: false,
+              // هيجيب قيمة البحث لو الصفحة اتعملها reload
+              searchQuery: '<%= typeof searchQuery !== 'undefined' ? searchQuery.replace(/'/g, "\\'") : '' %>',
+              suggestions: [],
+              isLoading: false,
+
+              // --- دوال التحكم ---
+              openSearch() {
+                this.isSearchOpen = true;
+                // (النقطة 1: عمل Focus)
+                this.$nextTick(() => {
+                  this.$refs.searchInput.focus();
+                  this.$refs.searchInput.select(); // بيحدد الكلمة المكتوبة
+                });
+              },
+              closeSearch() {
+                this.isSearchOpen = false;
+              },
+              clearSearch() {
+                this.searchQuery = '';
+                this.suggestions = [];
+                this.$refs.searchInput.focus();
+              },
+
+              // --- دالة جلب المقترحات ---
+              async getSuggestions() {
+                // لو مربع البحث فاضي، افضى المقترحات
+                if (this.searchQuery.trim() === '') {
+                  this.suggestions = [];
+                  this.isLoading = false;
+                  return;
+                }
+
+                this.isLoading = true;
+
+                try {
+                  // (النقطة 4: طلب الـ API)
+                  const response = await fetch(`/products/api/suggest?q=${this.searchQuery}`);
+                  if (!response.ok) throw new Error('Network error');
+
+                  const data = await response.json();
+                  this.suggestions = data.data;
+
+                } catch (error) {
+                  console.error('Error fetching suggestions:', error);
+                  this.suggestions = []; // فشل الطلب = إخفاء المقترحات
+                }
+
+                this.isLoading = false;
+              },
+                navigateToSuggestion(suggestion) {
+            // 1. أغلق الـ modal
+            this.closeSearch();
+
+            // 2. جهز الرابط الحالي
+            const currentUrl = new URL(window.location.href);
+
+            // 3. شيل الـ 'q' من الرابط الحالي
+            if (currentUrl.searchParams.has('q')) {
+              currentUrl.searchParams.delete('q');
+
+              // 4. حدّث الـ history بتاع المتصفح (يغير الرابط في شريط العنوان بدون reload)
+              // هذا يضمن أنك لو ضغطت "Back" هترجع للرابط النظيف
+              history.pushState(null, '', currentUrl.toString());
+            }
+
+            // 5. اذهب إلى صفحة المنتج
+            window.location.href = '/products/' + suggestion._id;
+          }
+        };
+      }
+    </script>
     <!-- Nav -->
     <div class="relative" x-data="{ open: false }">
       <nav
@@ -68,11 +282,14 @@
         >
       </nav>
 
-      <!-- Mobile -->
+      <!-- Mobile Button -->
       <button
         @click="open = !open"
         class="md:hidden focus:outline-none transition-transform duration-300"
         :class="open ? 'rotate-90' : 'rotate-0'"
+        aria-label="Toggle navigation menu"
+        :aria-expanded="open.toString()"
+        aria-controls="mobile-menu-dropdown"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -98,10 +315,15 @@
         </svg>
       </button>
 
+      <!-- Mobile Menu Dropdown -->
       <div
+        id="mobile-menu-dropdown"
         x-show="open"
         x-transition
-        class="absolute right-0 mt-3 w-52 bg-white text-gray-800 border border-gray-100 rounded-lg shadow-md py-2 md:hidden"
+        @click.away="open = false"
+        @keydown.escape.window="open = false"
+        class="absolute left-0 mt-3 w-52 bg-white text-gray-800 border border-gray-100 rounded-lg shadow-md py-2 md:hidden"
+        x-cloak
       >
         <a href="/" class="block px-4 py-2 hover:bg-gray-50">الرئيسية</a>
         <a

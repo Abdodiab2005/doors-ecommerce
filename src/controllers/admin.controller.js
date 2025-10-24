@@ -60,21 +60,7 @@ exports.renderProductsPage = async (req, res) => {
   }
 };
 
-exports.renderSettingsPage = async (req, res) => {
-  try {
-    const settings = await Settings.findOne();
-    res.render("admin/settings", {
-      title: "Admin Settings",
-      layout: "layout/admin",
-      settings,
-    });
-  } catch (error) {
-    logger.error("Error fetching settings:", error);
-    new AppError("Error fetching settings", 500);
-  }
-};
-
-exports.logout = (req, res) => {
+exports.logout = async (req, res, next) => {
   try {
     req.session.destroy();
     res.clearCookie("admin");

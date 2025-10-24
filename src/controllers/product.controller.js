@@ -1,6 +1,13 @@
 const Product = require("../models/Product.model");
 const logger = require("../utils/logger");
 const AppError = require("../utils/AppError");
+const { success } = require("../utils/response");
+
+function escapeRegex(string) {
+  // $& تعني "كل النص الذي تطابق"
+  // هذا الكود يجد أي حرف خاص بالـ regex ويضع قبله \
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 exports.getProductById = async (req, res, next) => {
   try {
@@ -23,12 +30,19 @@ exports.getProductById = async (req, res, next) => {
 exports.getAllProducts = async (req, res, next) => {
   try {
     const { page, limit, skip } = req.pagination;
-    const { category } = req.query;
+    const { category, q } = req.query;
 
     const filter = {};
 
     if (category) {
       filter.category = category;
+    }
+
+    if (q) {
+      filter.$or = [
+        { name: { $regex: q, $options: "i" } },
+        { description: { $regex: q, $options: "i" } },
+      ];
     }
 
     const [products, total] = await Promise.all([
@@ -38,10 +52,22 @@ exports.getAllProducts = async (req, res, next) => {
 
     const totalPages = Math.ceil(total / limit);
 
-    const title = category ? `${category} Products` : "All Products";
-    const description = category
-      ? `Browse ${category} products`
-      : "All Products";
+    let title = "All Products";
+    let description = "All Products";
+
+    if (category) {
+      title = `${category} Products`;
+      description = `Browse ${category} products`;
+    }
+
+    if (q) {
+      title = `Search results for: "${q}"`;
+      description = `Showing products matching "${q}"`;
+    }
+
+    if (category && q) {
+      title = `Search for "${q}" in ${category}`;
+    }
 
     res.render("products", {
       layout: "layout/main",
@@ -51,9 +77,45 @@ exports.getAllProducts = async (req, res, next) => {
       currentPage: page,
       totalPages,
       currentCategory: category || null,
+      searchQuery: q || null,
     });
   } catch (error) {
     logger.error("Error fetching products:", error);
     next(new AppError("Error fetching products", 500));
+  }
+};
+
+exports.getSuggestions = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+
+    if (typeof q !== "string") {
+      return success(res, "Invalid search query", []);
+    }
+
+    // 2. التحقق من الطول (اختياري ولكنه جيد)
+    if (q.length > 100) {
+      // لا تسمح بكلمات بحث طويلة جداً
+      return success(res, "Search query is too long", []);
+    }
+
+    const queryTerm = q.trim();
+
+    if (!queryTerm) {
+      return success(res, "No suggestions found", []);
+    }
+
+    const sanitizedQuery = escapeRegex(queryTerm);
+
+    const products = await Product.find({
+      name: { $regex: sanitizedQuery, $options: "i" },
+    })
+      .select("name _id")
+      .limit(10);
+
+    return success(res, "Suggestions fetched successfully", products);
+  } catch (error) {
+    logger.error("Error fetching suggestions:", error);
+    return next(new AppError("Error fetching suggestions", 500));
   }
 };

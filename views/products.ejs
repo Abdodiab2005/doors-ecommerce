@@ -1,5 +1,5 @@
 <section
-  class="py-16 bg-base-100 text-neutral-800"
+  class="py-8 bg-base-100 text-neutral-800"
   x-data="{ activeTab: 'All' }"
 >
   <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,7 +18,7 @@
           x-data="{ activeTab: '<%= currentCategory ? currentCategory : 'All' %>' }"
         >
           <a
-            href="/products?page=1"
+            href="/products?page=1<%= searchQuery? '&q=' + searchQuery : '' %>"
             :class="{'tab-active font-semibold text-primary bg-accent ': activeTab === 'All'}"
             class="tab tab-lg px-6 hover:bg-primary hover:text-accent m-1 transition-all duration-200 text-black"
           >
@@ -26,7 +26,7 @@
           </a>
 
           <a
-            href="/products?category=inner&page=1"
+            href="/products?category=inner&page=1<%= searchQuery? '&q=' + searchQuery : '' %>"
             :class="{'tab-active font-semibold text-primary bg-accent ': activeTab === 'inner'}"
             class="tab tab-lg px-6 hover:bg-primary hover:text-accent m-1 transition-all duration-200 text-black"
           >
@@ -34,7 +34,7 @@
           </a>
 
           <a
-            href="/products?category=main&page=1"
+            href="/products?category=main&page=1<%= searchQuery? '&q=' + searchQuery : '' %>"
             :class="{'tab-active font-semibold text-primary bg-accent ': activeTab === 'main'}"
             class="tab tab-lg px-6 hover:bg-primary hover:text-accent m-1 transition-all duration-200 text-black"
           >
@@ -43,6 +43,15 @@
         </div>
       </div>
     </div>
+
+    <% if (searchQuery) { %>
+    <p class="text-center text-neutral-400 mb-4">
+      Showing
+      <span class="font-semibold"> <%= products.length %> </span> results for
+      "<%= searchQuery %>"
+    </p>
+    <% } %>
+
     <!-- prettier-ignore -->
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6"
@@ -77,7 +86,7 @@
             </span>
           </div>
           <a
-            href="/products/<%= product._id %>"
+            href="/products/<%= product._id %><%= searchQuery? '&q=' + searchQuery : '' %>"
             class="text-sm text-secondary hover:text-primary transition-colors mt-1"
           >
             View Details
@@ -95,7 +104,7 @@
     <div class="flex justify-center mt-10 text-primary">
       <div class="join">
         <a
-          href="?page=<%= currentPage - 1 %><% if (currentCategory) { %>&category=<%= currentCategory %><% } %>"
+          href="?page=<%= currentPage - 1 %><%= currentCategory? '&category=' + currentCategory : '' %><%= searchQuery? '&q=' + searchQuery : '' %>"
           class="join-item btn btn-sm sm:btn-md <%= (currentPage === 1) ? 'btn-disabled' : '' %>"
         >
           «
@@ -104,7 +113,7 @@
           Page <%= currentPage %> of <%= totalPages %>
         </button>
         <a
-          href="?page=<%= currentPage + 1 %><% if (currentCategory) { %>&category=<%= currentCategory %><% } %>"
+          href="?page=<%= currentPage + 1 %><%= currentCategory? '&category=' + currentCategory : '' %><%= searchQuery? '&q=' + searchQuery : '' %>"
           class="join-item btn btn-sm sm:btn-md <%= (currentPage === totalPages) ? 'btn-disabled' : '' %>"
         >
           »

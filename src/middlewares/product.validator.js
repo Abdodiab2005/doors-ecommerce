@@ -10,6 +10,7 @@ exports.validateCategoryQuery = [
     .optional()
     .isIn(["main", "inner"])
     .withMessage("Invalid category name specified"),
+  query("q").optional().isString().withMessage("Invalid search query"),
 ];
 
 exports.checkValidation = (req, res, next) => {

@@ -1,49 +1,30 @@
 const mongoose = require("mongoose");
 
-const SettingsSchema = new mongoose.Schema(
+const SettingSchema = new mongoose.Schema(
   {
-    configIdentifier: {
-      type: String,
-      default: "main_settings",
-      unique: true,
-      index: true,
+    siteName: { type: String, default: "Leviro" },
+    email: { type: String, default: "info@yourdomain.com" },
+    phone: { type: String, default: "+201234567890" },
+    whatsapp: { type: String }, // optional
+    social: {
+      facebook: { type: String },
+      instagram: { type: String },
+      tiktok: { type: String },
+      twitter: { type: String },
     },
-    logo: {
-      type: String,
-      required: true,
-      default: "/images/logo-default.png",
+    assets: {
+      logo: { type: String }, // path/url
+      favicon: { type: String },
+      slider: [{ type: String }], // array of image paths
+      innerDoorsImage: { type: String },
+      outerDoorsImage: { type: String },
     },
-    favicon: {
-      type: String,
-      required: true,
-      default: "/images/favicon.ico",
-    },
-    contactEmail: {
-      type: String,
-      required: true,
-      default: "info@doorshop.com",
-    },
-    phoneNumber: {
-      type: String,
-      required: true,
-      default: "+02123456789",
-    },
-    whatsappNumber: {
-      type: String,
-      required: true,
-      default: "+02123456789",
-    },
-
-    socialMedia: {
-      facebook: { type: String, default: "https://facebook.com" },
-      instagram: { type: String, default: "https://instagram.com" },
-      x_twitter: { type: String, default: "https://x.com" },
-      linkedin: { type: String, default: "https://linkedin.com" },
+    meta: {
+      title: { type: String },
+      description: { type: String },
     },
   },
-  { timestamps: true }
+  { collection: "settings", timestamps: true }
 );
 
-const Settings = mongoose.model("Settings", SettingsSchema);
-
-module.exports = Settings;
+module.exports = mongoose.model("Setting", SettingSchema);
