@@ -1,213 +1,90 @@
-<style>
-  .product-details-container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    display: grid;
-    /* عمودين، واحد للصور والتاني للمعلومات */
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    font-family: Arial, sans-serif;
-  }
-
-  /* --- عمود الصور (الشمال) --- */
-  .product-gallery {
-    display: flex;
-    flex-direction: column;
-  }
-  .main-image {
-    width: 100%;
-    height: 450px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid #eee;
-    margin-bottom: 15px;
-  }
-  .thumbnail-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 10px;
-  }
-  .thumbnail {
-    width: 100%;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 2px solid #ddd;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  .thumbnail:hover {
-    border-color: #007bff;
-  }
-
-  /* --- عمود المعلومات (اليمين) --- */
-  .product-info {
-    display: flex;
-    flex-direction: column;
-  }
-  .product-info h1 {
-    font-size: 2.5rem;
-    margin-top: 0;
-    margin-bottom: 10px;
-  }
-  .info-category {
-    background-color: #f0f0f0;
-    color: #555;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    display: inline-block;
-    margin-bottom: 20px;
-    text-transform: capitalize;
-  }
-  .info-price {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  .info-stock {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
-  }
-  .in-stock { color: #28a745; font-weight: bold; }
-  .out-of-stock { color: #dc3545; font-weight: bold; }
-
-  .info-colors h4 {
-    margin-bottom: 10px;
-  }
-  .color-options {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .color-swatch {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    box-shadow: 0 0 5px rgba(0,0,0,0.2);
-    cursor: pointer;
-  }
-  .color-swatch:hover {
-    opacity: 0.8;
-  }
-
-  .info-description {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #444;
-    margin-bottom: 30px;
-  }
-
-  .add-to-cart {
-    padding: 15px 20px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  .add-to-cart:hover {
-    background-color: #0056b3;
-  }
-  .add-to-cart:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-  }
-
-  /* --- (للموبايل) --- */
-  @media (max-width: 768px) {
-    .product-details-container {
-      grid-template-columns: 1fr; /* خلهم تحت بعض */
-    }
-    .main-image {
-      height: 350px;
-    }
-  }
-</style>
-
-<div class="product-details-container">
-  
-  <div class="product-gallery">
-    <img 
-      src="<%= (product.images && product.images.length > 0) ? product.images[0] : 'https://via.placeholder.com/600x450?text=No+Image' %>" 
-      alt="<%= product.name %>" 
-      class="main-image"
-      id="mainImage"
+<div
+  x-data="productPage()"
+  class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start mt-8"
+>
+  <!-- الصور -->
+  <div class="flex flex-col">
+    <div
+      class="bg-base-100 rounded-xl shadow-lg overflow-hidden mb-4 border border-neutral-200"
     >
+      <img
+        :src="mainImage"
+        alt="Door preview"
+        class="w-full h-auto object-cover aspect-[3/4] transition-all duration-500 ease-in-out"
+      />
+    </div>
 
-    <% 
-      const allImages = [...product.images];
-      product.colors.forEach(color => {
-        if (color.image) allImages.push(color.image);
-      });
-    %>
-
-    <div class="thumbnail-grid">
-      <% allImages.forEach(img => { %>
-        <img 
-          src="<%= img %>" 
-          alt="Product Thumbnail" 
-          class="thumbnail"
-          onclick="changeImage('<%= img %>')"
+    <div class="grid grid-cols-4 sm:grid-cols-5 gap-2 xs:gap-3">
+      <template x-for="(image, i) in galleryImages" :key="i">
+        <div
+          @click="mainImage = image"
+          :class="mainImage === image
+            ? 'ring-2 ring-primary ring-offset-2'
+            : 'ring-1 ring-transparent hover:ring-neutral-400'"
+          class="rounded-lg overflow-hidden cursor-pointer transition-all duration-200"
         >
-      <% }) %>
+          <img
+            :src="image"
+            class="w-full h-20 xs:h-24 object-cover"
+            alt="Door thumbnail"
+          />
+        </div>
+      </template>
     </div>
   </div>
 
-  <div class="product-info">
-    <span class="info-category"><%= product.category %></span>
-    <h1><%= product.name %></h1>
-    <p class="info-price">$<%= product.price.toFixed(2) %></p>
+  <!-- التفاصيل -->
+  <div class="flex flex-col justify-center py-4">
+    <h1 class="text-3xl md:text-4xl font-bold mb-3 text-neutral-800">
+      <%= product.name %>
+    </h1>
 
-    <% if (product.stock > 0) { %>
-      <p class="info-stock in-stock">
-        In Stock (<%= product.stock %> available)
-      </p>
-    <% } else { %>
-      <p class="info-stock out-of-stock">Out of Stock</p>
-    <% } %>
+    <p class="text-base text-neutral-400 mb-6 leading-relaxed">
+      <%= product.description %>
+    </p>
 
-    <% if (product.colors && product.colors.length > 0) { %>
-      <div class="info-colors">
-        <h4>Available Colors:</h4>
-        <div class="color-options">
-          <% product.colors.forEach(color => { %>
-            <span 
-              class="color-swatch" 
-              style="background-color: <%= color.hex %>;" 
-              title="<%= color.name %>"
-              <% if (color.image) { %>
-                onclick="changeImage('<%= color.image %>')"
-              <% } %>
-            ></span>
-          <% }) %>
-        </div>
+    <!-- اختيار اللون -->
+    <div class="mb-8">
+      <label class="text-sm font-semibold text-neutral-800 mb-2 block"
+        >Available colors</label
+      >
+      <div class="flex flex-wrap items-center gap-3">
+        <% for (let color of product.colors) { %>
+        <button
+          @click="changeColor('<%= color.hex %>', <%- JSON.stringify(color.images || []) %>)"
+          class="btn btn-circle btn-md border-2 border-neutral-300 transition-transform hover:scale-105"
+          style="background-color: <%= color.hex %>"
+          aria-label="<%= color.name %>"
+        ></button>
+        <% } %>
       </div>
-    <% } %>
-    
-    <div class="info-description">
-      <p><%= product.description %></p>
     </div>
-    
-    <button 
-      class="add-to-cart"
-      <%= product.stock === 0 ? 'disabled' : '' %>
-    >
-      <%= product.stock === 0 ? 'Unavailable' : 'Add to Cart' %>
-    </button>
 
+    <!-- الأزرار -->
+    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+      <button class="btn btn-neutral btn-lg w-full sm:w-auto text-lg">
+        📞 Call Us
+      </button>
+      <button class="btn btn-outline btn-lg w-full sm:w-auto text-lg">
+        💬 WhatsApp
+      </button>
+      <button class="btn btn-outline btn-lg w-full sm:w-auto text-lg">
+        ✉️ Email
+      </button>
+    </div>
   </div>
 </div>
 
 <script>
-  function changeImage(newSrc) {
-    document.getElementById('mainImage').src = newSrc;
+  function productPage() {
+    return {
+      mainImage:
+        "<%= product.images && product.images.length ? product.images[0] : '' %>",
+      galleryImages: <%- JSON.stringify(product.images || []) %>,
+      changeColor(hex, images) {
+        this.galleryImages = images.length ? images : <%- JSON.stringify(product.images || []) %>;
+        this.mainImage = this.galleryImages[0];
+      },
+    };
   }
 </script>

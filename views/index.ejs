@@ -1,3 +1,110 @@
-<section>
-  <h1>Home</h1>
+<!-- Hero Section -->
+<section
+  class="py-16 md:py-24 mt-16 flex items-center justify-center text-center relative overflow-hidden rounded-2xl"
+  style="
+    background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.6)),
+      url('/images/inner-doors/hero.jpg');
+    background-size: cover;
+    background-position: center;
+  "
+>
+  <div class="relative z-10 text-white max-w-3xl px-4 animate-fade-in">
+    <h1 class="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">
+      Elegance at Your Entrance
+    </h1>
+    <p class="text-base md:text-lg opacity-90">
+      Discover our collection of premium interior and exterior doors, crafted to
+      elevate your space.
+    </p>
+  </div>
 </section>
+
+<!-- Categories Section -->
+<section class="py-20 px-6 md:px-12 lg:px-24 bg-base-100">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
+    <!-- Internal Doors -->
+    <a
+      href="/products?category=inner"
+      class="group rounded-xl overflow-hidden bg-accent hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300"
+    >
+      <div
+        class="h-80 bg-center bg-cover"
+        style="background-image: url('/images/inner-doors/door1.jpg')"
+      ></div>
+      <div class="p-8 text-center">
+        <h3
+          class="text-2xl font-bold text-primary group-hover:text-black transition-colors"
+        >
+          Internal Doors
+        </h3>
+        <p class="text-secondary mt-2">
+          Refined designs to complement your home’s aesthetic.
+        </p>
+      </div>
+    </a>
+
+    <!-- External Doors -->
+    <a
+      href="/products?category=main"
+      class="group rounded-xl overflow-hidden bg-accent hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300"
+    >
+      <div
+        class="h-80 bg-center bg-cover"
+        style="background-image: url('/images/main-doors/door1.jpg')"
+      ></div>
+      <div class="p-8 text-center">
+        <h3
+          class="text-2xl font-bold text-primary group-hover:text-black transition-colors"
+        >
+          External Doors
+        </h3>
+        <p class="text-secondary mt-2">
+          Durable and secure doors that make a statement.
+        </p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-20 bg-base-100 text-center">
+  <h2 class="text-3xl font-bold mb-4 text-primary">Get in Touch</h2>
+  <p class="text-secondary mb-10">
+    We're here to help you find the perfect door.
+  </p>
+
+  <div class="flex flex-col sm:flex-row justify-center gap-4 flex-wrap">
+    <a
+      href="tel:+201234567890"
+      class="flex items-center justify-center gap-2 min-w-[200px] h-14 px-6 bg-primary text-white rounded-xl hover:scale-105 transition-transform"
+    >
+      <i class="material-symbols-outlined">call</i> Call Us
+    </a>
+
+    <a
+      href="https://wa.me/201234567890"
+      class="flex items-center justify-center gap-2 min-w-[200px] h-14 px-6 bg-primary text-white rounded-xl hover:scale-105 transition-transform"
+    >
+      <i class="material-symbols-outlined">chat</i> Message on WhatsApp
+    </a>
+
+    <a
+      href="mailto:info@yourdomain.com"
+      class="flex items-center justify-center gap-2 min-w-[200px] h-14 px-6 bg-primary text-white rounded-xl hover:scale-105 transition-transform"
+    >
+      <i class="material-symbols-outlined">email</i> Send an Email
+    </a>
+  </div>
+</section>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const fadeEls = document.querySelectorAll(".animate-fade-in");
+    fadeEls.forEach((el, i) => {
+      el.style.opacity = 0;
+      setTimeout(() => {
+        el.style.transition = "opacity 1s ease";
+        el.style.opacity = 1;
+      }, i * 200);
+    });
+  });
+</script>

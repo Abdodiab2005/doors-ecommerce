@@ -6,12 +6,12 @@ module.exports = function paginationMiddleware(req, res, next) {
 
     // تأمين وتحويل القيم
     page = parseInt(page) || 1;
-    limit = parseInt(limit) || 9;
+    limit = 12;
 
     // منع أي قيم غير منطقية أو محاولات حقن
     if (page < 1 || limit < 1 || limit > 50) {
       page = 1;
-      limit = 10;
+      limit = 12;
     }
 
     req.pagination = { page, limit, skip: (page - 1) * limit };

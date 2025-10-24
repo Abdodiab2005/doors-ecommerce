@@ -4,6 +4,8 @@ const path = require("path");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const expressEjsLayouts = require("express-ejs-layouts");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 
 // استيراد الـ Handlers من ملفاتهم
 const notFoundHandler = require("./middlewares/notFound");
@@ -27,7 +29,13 @@ app.use(
           "picsum.photos",
           "fastly.picsum.photos",
         ],
-        "script-src": ["'self'", "'unsafe-inline'"],
+        "script-src": [
+          "'self'",
+          "'unsafe-inline'",
+          "cdn.jsdelivr.net",
+          "cdn.tailwindcss.com",
+          "'unsafe-eval'",
+        ],
       },
     },
   })
@@ -37,6 +45,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieParser());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "verysecretkey",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24, // يوم كامل
+    },
+  })
+);
 
 // --- 2. View Engine Setup ---
 app.set("view engine", "ejs");
@@ -48,6 +69,8 @@ app.use(setLocals);
 app.use(globalSettings);
 app.use("/", require("./routes/home.routes"));
 app.use("/products", require("./routes/product.routes"));
+app.use("/admin", require("./routes/admin.routes"));
+app.use("/admin", require("./routes/auth.routes"));
 
 // --- 4. Error Handling ---
 // 404 Handler
