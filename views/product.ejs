@@ -61,16 +61,27 @@
     </div>
 
     <!-- الأزرار -->
-    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-      <button class="btn btn-neutral btn-lg w-full sm:w-auto text-lg">
+    <div class="flex flex-col lg:flex-row gap-3 lg:gap-4">
+      <a
+        href="tel:<%= settings?.phone %>"
+        class="btn btn-neutral btn-lg w-full lg:w-auto text-lg"
+      >
         <i class="fa-solid fa-phone"></i> Call Us
-      </button>
-      <button class="btn btn-outline btn-lg w-full sm:w-auto text-lg">
+      </a>
+      <a
+        href="https://wa.me/<%= (settings?.whatsapp)?.replace(/\D/g, '') %>"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-outline btn-lg w-full lg:w-auto text-lg"
+      >
         <i class="fa-brands fa-whatsapp"></i> WhatsApp
-      </button>
-      <button class="btn btn-outline btn-lg w-full sm:w-auto text-lg">
+      </a>
+      <a
+        href="mailto:<%= settings?.email %>"
+        class="btn btn-outline btn-lg w-full lg:w-auto text-lg"
+      >
         <i class="fa-solid fa-envelope"></i> Email
-      </button>
+      </a>
     </div>
   </div>
 </div>

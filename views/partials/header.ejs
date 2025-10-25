@@ -13,7 +13,7 @@
     <!-- Logo -->
     <a href="/" class="flex items-center gap-2 group">
       <img
-        src="<%= settings?.logo %>"
+        src="<%= settings.assets?.logo %>"
         alt="Logo"
         class="h-9 w-auto transition-transform duration-300 group-hover:scale-105 rounded-full"
         onerror="this.src='https://placehold.co/40x40/f87171/white?text=Logo';"
@@ -262,6 +262,7 @@
             },
           };
         }
+      // prettier-ignore
     </script>
     <!-- Nav -->
     <div class="relative" x-data="{ open: false }">

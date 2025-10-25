@@ -17,29 +17,16 @@
           class="tabs tabs-boxed bg-base-200 inline-flex whitespace-nowrap"
           x-data="{ activeTab: '<%= currentCategory ? currentCategory : 'All' %>' }"
         >
-          <a
-            href="/products?page=1<%= searchQuery? '&q=' + searchQuery : '' %>"
-            :class="{'tab-active font-semibold text-primary bg-accent ': activeTab === 'All'}"
-            class="tab tab-lg px-6 hover:bg-primary hover:text-accent m-1 transition-all duration-200 text-black"
-          >
-            All Products
-          </a>
+          <% for (let cat of categories) { %>
 
           <a
-            href="/products?category=inner&page=1<%= searchQuery? '&q=' + searchQuery : '' %>"
-            :class="{'tab-active font-semibold text-primary bg-accent ': activeTab === 'inner'}"
-            class="tab tab-lg px-6 hover:bg-primary hover:text-accent m-1 transition-all duration-200 text-black"
+            href="<%= cat.url %>"
+            :class="{'tab-active font-semibold !bg-accent text-primary! ': activeTab === '<%= cat.name %>'}"
+            class="tab tab-lg px-6 hover:text-primary hover:bg-accent m-1 transition-all duration-200 text-black"
           >
-            inner
+            <%= cat.name %>
           </a>
-
-          <a
-            href="/products?category=main&page=1<%= searchQuery? '&q=' + searchQuery : '' %>"
-            :class="{'tab-active font-semibold text-primary bg-accent ': activeTab === 'main'}"
-            class="tab tab-lg px-6 hover:bg-primary hover:text-accent m-1 transition-all duration-200 text-black"
-          >
-            main
-          </a>
+          <% } %>
         </div>
       </div>
     </div>

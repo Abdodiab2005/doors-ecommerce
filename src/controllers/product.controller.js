@@ -69,6 +69,21 @@ exports.getAllProducts = async (req, res, next) => {
       title = `Search for "${q}" in ${category}`;
     }
 
+    const categories = [
+      {
+        name: "All",
+        url: "/products",
+      },
+      {
+        name: "inner",
+        url: "/products?category=inner",
+      },
+      {
+        name: "main",
+        url: "/products?category=main",
+      },
+    ];
+
     res.render("products", {
       layout: "layout/main",
       title: title,
@@ -77,6 +92,7 @@ exports.getAllProducts = async (req, res, next) => {
       currentPage: page,
       totalPages,
       currentCategory: category || null,
+      categories,
       searchQuery: q || null,
     });
   } catch (error) {

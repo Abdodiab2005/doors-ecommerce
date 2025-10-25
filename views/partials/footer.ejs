@@ -1,25 +1,40 @@
 <footer class="bg-[#1E1E1F] text-[#DED9D3] mt-20 pt-14">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid gap-10 md:grid-cols-3">
-      <!-- Logo + About -->
       <div>
-        <img src="<%= settings?.logo %>" alt="Logo" class="h-12 mb-4" />
+        <a href="/" class="h-12 mb-4">
+          <img
+            src="<%= settings.assets?.logo %>"
+            alt="Logo"
+            class="h-12 mb-4"
+            onerror="this.src=`https:\/\/placehold.co/100x50/f87171/white?text=Logo`"
+        /></a>
         <p class="text-sm leading-relaxed text-[#AAA8A3]">
           متجر متخصص في عرض أفضل أنواع الأبواب الداخلية والخارجية بأجود الخامات
           والتصميمات العصرية.
         </p>
 
-        <!-- Social -->
         <div class="flex gap-4 mt-6">
-          <a href="#" class="hover:text-white transition">
+          <a
+            href="<%= settings.social?.facebook || '#' %>"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-white transition"
+          >
             <i class="fa-brands fa-facebook-f text-lg"></i>
           </a>
-          <a href="#" class="hover:text-white transition">
+          <a
+            href="<%= settings.social?.instagram || '#' %>"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-white transition"
+          >
             <i class="fa-brands fa-instagram text-lg"></i>
           </a>
           <a
-            href="https://wa.me/<%= settings?.whatsappNumber %>"
+            href="https://wa.me/<%= settings?.whatsapp %>"
             target="_blank"
+            rel="noopener noreferrer"
             class="hover:text-white transition"
           >
             <i class="fa-brands fa-whatsapp text-lg"></i>
@@ -27,7 +42,6 @@
         </div>
       </div>
 
-      <!-- Links -->
       <div class="grid grid-cols-2 gap-8 md:gap-6">
         <div>
           <h3 class="text-lg font-semibold mb-4 text-white">روابط سريعة</h3>
@@ -52,33 +66,27 @@
           </ul>
         </div>
 
-        <!-- Contact -->
         <div>
           <h3 class="text-lg font-semibold mb-4 text-white">تواصل معنا</h3>
           <ul class="space-y-4 text-sm">
             <li class="flex gap-3 items-center">
               <i class="fa-solid fa-envelope"></i>
-              <a
-                href="mailto:<%= settings?.contactEmail %>"
-                class="hover:text-white"
-              >
-                <%= settings?.contactEmail %>
+              <a href="mailto:<%= settings?.email %>" class="hover:text-white">
+                <%= settings?.email %>
               </a>
             </li>
             <li class="flex gap-3 items-center">
               <i class="fa-solid fa-phone"></i>
-              <a
-                href="tel:<%= settings?.phoneNumber %>"
-                class="hover:text-white"
-              >
-                <%= settings?.phoneNumber %>
+              <a href="tel:<%= settings?.phone %>" class="hover:text-white">
+                <%= settings?.phone %>
               </a>
             </li>
             <li class="flex gap-3 items-center">
               <i class="fa-brands fa-whatsapp"></i>
               <a
-                href="https://wa.me/<%= settings?.whatsappNumber %>"
+                href="https://wa.me/<%= settings?.whatsapp %>"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="hover:text-white"
               >
                 واتساب
@@ -89,7 +97,6 @@
       </div>
     </div>
 
-    <!-- Bottom -->
     <div
       class="border-t border-[#ACA59B]/20 mt-10 py-4 text-center text-xs text-[#85817A]"
     >

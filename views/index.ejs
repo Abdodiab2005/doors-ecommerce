@@ -1,6 +1,20 @@
+<style>
+  .glass {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .glass:hover {
+    transform: translateY(-10px) scale(1.02);
+  }
+</style>
+
 <!-- Hero Section -->
 <section
-  class="py-16 md:py-24 flex items-center justify-center text-center relative overflow-hidden rounded-2xl"
+  class="py-16 px-4 md:py-24 lg:py-32 flex items-center justify-center text-center relative overflow-hidden rounded-2xl"
   style="
     background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.6)),
       url('/images/hero.jpg');
@@ -16,6 +30,38 @@
       Discover our collection of premium interior and exterior doors, crafted to
       elevate your space.
     </p>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-20 px-6 md:px-12 bg-[#DED9D3] text-[#242425]">
+  <div class="max-w-6xl mx-auto text-center mb-12">
+    <h2 class="text-3xl font-bold mb-4">Why Choose Us?</h2>
+    <p class="text-[#ACA59B]">
+      Combining craftsmanship, durability, and timeless design — every door
+      tells a story.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-6xl mx-auto">
+    <% if (features && features.length > 0) { %> <% features.forEach(feature =>
+    { %>
+
+    <div
+      class="glass rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-8 text-center flex flex-col items-center"
+    >
+      <div
+        class="w-16 h-16 flex items-center justify-center rounded-full bg-[#242425] text-white mb-6"
+      >
+        <i class="<%= feature.icon %> text-2xl"></i>
+      </div>
+
+      <h3 class="text-xl font-semibold mb-3"><%= feature.title %></h3>
+
+      <p class="text-[#ACA59B] text-sm"><%= feature.description %></p>
+    </div>
+
+    <% }) %> <% } %>
   </div>
 </section>
 
