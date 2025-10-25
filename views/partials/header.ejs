@@ -2,8 +2,8 @@
   x-data="{ scrolled: false }"
   @scroll.window="scrolled = window.scrollY > 100"
   :class="scrolled 
-    ? 'bg-white/95 shadow-sm backdrop-blur-md text-gray-800' 
-    : 'bg-transparent text-primary'"
+      ? 'bg-white/95 shadow-sm backdrop-blur-md text-gray-800' 
+      : 'bg-transparent text-primary'"
   class="fixed top-0 left-0 w-full h-[72px] z-50 flex items-center transition-all duration-500 ease-in-out"
   dir="rtl"
 >
@@ -187,79 +187,81 @@
     </div>
 
     <script>
-          function searchModal() {
-            return {
-              isSearchOpen: false,
-              // هيجيب قيمة البحث لو الصفحة اتعملها reload
-              searchQuery: '<%= typeof searchQuery !== 'undefined' ? searchQuery.replace(/'/g, "\\'") : '' %>',
-              suggestions: [],
-              isLoading: false,
+      // prettier-ignore
+      function searchModal() {
+          return {
+            isSearchOpen: false,
+            searchQuery:
+              '<%= (typeof searchQuery !== "undefined" && searchQuery) ? searchQuery.replace(/"/g, "\\\"") : "" %>',           
+            suggestions: [],
+            isLoading: false,
 
-              // --- دوال التحكم ---
-              openSearch() {
-                this.isSearchOpen = true;
-                // (النقطة 1: عمل Focus)
-                this.$nextTick(() => {
-                  this.$refs.searchInput.focus();
-                  this.$refs.searchInput.select(); // بيحدد الكلمة المكتوبة
-                });
-              },
-              closeSearch() {
-                this.isSearchOpen = false;
-              },
-              clearSearch() {
-                this.searchQuery = '';
-                this.suggestions = [];
+            // --- دوال التحكم ---
+            openSearch() {
+              this.isSearchOpen = true;
+              // (النقطة 1: عمل Focus)
+              this.$nextTick(() => {
                 this.$refs.searchInput.focus();
-              },
+                this.$refs.searchInput.select(); // بيحدد الكلمة المكتوبة
+              });
+            },
+            closeSearch() {
+              this.isSearchOpen = false;
+            },
+            clearSearch() {
+              this.searchQuery = "";
+              this.suggestions = [];
+              this.$refs.searchInput.focus();
+            },
 
-              // --- دالة جلب المقترحات ---
-              async getSuggestions() {
-                // لو مربع البحث فاضي، افضى المقترحات
-                if (this.searchQuery.trim() === '') {
-                  this.suggestions = [];
-                  this.isLoading = false;
-                  return;
-                }
-
-                this.isLoading = true;
-
-                try {
-                  // (النقطة 4: طلب الـ API)
-                  const response = await fetch(`/products/api/suggest?q=${this.searchQuery}`);
-                  if (!response.ok) throw new Error('Network error');
-
-                  const data = await response.json();
-                  this.suggestions = data.data;
-
-                } catch (error) {
-                  console.error('Error fetching suggestions:', error);
-                  this.suggestions = []; // فشل الطلب = إخفاء المقترحات
-                }
-
+            // --- دالة جلب المقترحات ---
+            async getSuggestions() {
+              // لو مربع البحث فاضي، افضى المقترحات
+              if (this.searchQuery.trim() === "") {
+                this.suggestions = [];
                 this.isLoading = false;
-              },
-                navigateToSuggestion(suggestion) {
-            // 1. أغلق الـ modal
-            this.closeSearch();
+                return;
+              }
 
-            // 2. جهز الرابط الحالي
-            const currentUrl = new URL(window.location.href);
+              this.isLoading = true;
 
-            // 3. شيل الـ 'q' من الرابط الحالي
-            if (currentUrl.searchParams.has('q')) {
-              currentUrl.searchParams.delete('q');
+              try {
+                // (النقطة 4: طلب الـ API)
+                const response = await fetch(
+                  `/products/api/suggest?q=${this.searchQuery}`
+                );
+                if (!response.ok) throw new Error("Network error");
 
-              // 4. حدّث الـ history بتاع المتصفح (يغير الرابط في شريط العنوان بدون reload)
-              // هذا يضمن أنك لو ضغطت "Back" هترجع للرابط النظيف
-              history.pushState(null, '', currentUrl.toString());
-            }
+                const data = await response.json();
+                this.suggestions = data.data;
+              } catch (error) {
+                console.error("Error fetching suggestions:", error);
+                this.suggestions = []; // فشل الطلب = إخفاء المقترحات
+              }
 
-            // 5. اذهب إلى صفحة المنتج
-            window.location.href = '/products/' + suggestion._id;
-          }
-        };
-      }
+              this.isLoading = false;
+            },
+            navigateToSuggestion(suggestion) {
+              // 1. أغلق الـ modal
+              this.closeSearch();
+
+              // 2. جهز الرابط الحالي
+              const currentUrl = new URL(window.location.href);
+
+              // 3. شيل الـ 'q' من الرابط الحالي
+              if (currentUrl.searchParams.has("q")) {
+                currentUrl.searchParams.delete("q");
+
+                // 4. حدّث الـ history بتاع المتصفح (يغير الرابط في شريط العنوان بدون reload)
+                // هذا يضمن أنك لو ضغطت "Back" هترجع للرابط النظيف
+                history.pushState(null, "", currentUrl.toString());
+              }
+
+              // 5. اذهب إلى صفحة المنتج
+              window.location.href = "/products/" + suggestion._id;
+            },
+          };
+        }
     </script>
     <!-- Nav -->
     <div class="relative" x-data="{ open: false }">
