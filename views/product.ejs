@@ -35,9 +35,55 @@
 
   <!-- التفاصيل -->
   <div class="flex flex-col justify-center py-4">
-    <h1 class="text-3xl md:text-4xl font-bold mb-3 text-neutral-800">
-      <%= product.name %>
+    <h1
+      class="text-3xl md:text-4xl font-bold mb-3 text-neutral-800 flex items-start justify-between"
+    >
+      <div>
+        <div><%= product.name %></div>
+        <span class="text-xs text-primary bg-secondary px-2 py-1 rounded-full">
+          <i class="fa-solid fa-tag"></i> <%= product.category %>
+        </span>
+      </div>
+
+      <button id="shareButton" class="btn btn-ghost btn-circle">
+        <i class="fa-solid fa-share-nodes text-primary text-xl"></i>
+      </button>
     </h1>
+
+    <script>
+      // 1. امسك الزر
+      const shareButton = document.getElementById("shareButton");
+
+      // 2. أضف مستمع الحدث (Click)
+      shareButton.addEventListener("click", async () => {
+
+        // [تم التعديل هنا]: حذف علامات التنصيص " " الإضافية
+        const shareData = {
+          title: <%- JSON.stringify(product.name) %>,
+          text: <%- JSON.stringify(product.description) %>,
+          url: window.location.href,
+        };
+
+        // 4. تحقق إذا كان المتصفح يدعم الـ API
+        if (navigator.share) {
+          try {
+            // 5. اطلب من المتصفح فتح قائمة المشاركة
+            await navigator.share(shareData);
+            console.log("Product shared successfully!");
+          } catch (err) {
+            console.error("Share failed:", err.message);
+          }
+        } else {
+          // 6. [تحسين]: إضافة تنبيه للمستخدم عند النسخ
+          try {
+            await navigator.clipboard.writeText(window.location.href);
+            alert("Link copied to clipboard!"); // إبلاغ المستخدم
+          } catch (err) {
+            alert("Failed to copy link.");
+          }
+        }
+      });
+    </script>
 
     <p class="text-base text-neutral-400 mb-6 leading-relaxed">
       <%= product.description %>
@@ -50,8 +96,9 @@
       >
       <div class="flex flex-wrap items-center gap-3">
         <% for (let color of product.colors) { %>
+        <!-- prettier-ignore -->
         <button
-          @click="changeColor('<%= color.hex %>', <%- JSON.stringify(color.images || []) %>)"
+          @click='changeColor("<%= color.hex %>", <%- JSON.stringify(color.images || []) %>)'
           class="btn btn-circle btn-md border-2 border-neutral-300 transition-transform hover:scale-105"
           style="background-color: <%= color.hex %>"
           aria-label="<%= color.name %>"

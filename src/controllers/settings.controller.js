@@ -1,10 +1,9 @@
 const Setting = require("../models/Setting.model");
 const Admin = require("../models/Admin.model");
-const fs = require("fs");
-const path = require("path");
 const logger = require("../utils/logger");
 const AppError = require("../utils/AppError");
 const { success } = require("../utils/response");
+const _maybeDeleteFile = require("../utils/mayBeDelete");
 
 const SETTINGS_ID_QUERY = {}; // we maintain single doc; can just use findOne
 
@@ -160,21 +159,6 @@ async function changeAdminPassword(req, res, next) {
   } catch (err) {
     logger.error(err);
     return next(new AppError("Server error", 500));
-  }
-}
-
-/* helper to delete old local files - accepts path like /images/settings/xxx.jpg */
-function _maybeDeleteFile(relativePath) {
-  try {
-    if (!relativePath) return;
-    const p = path.join(
-      process.cwd(), // <-- أكثر أماناً
-      "public",
-      relativePath.replace(/^\//, "")
-    );
-    if (fs.existsSync(p)) fs.unlinkSync(p);
-  } catch (err) {
-    logger.warn("Failed to delete file", err.message);
   }
 }
 

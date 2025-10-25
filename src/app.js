@@ -28,6 +28,7 @@ app.use(
           "via.placeholder.com",
           "picsum.photos",
           "fastly.picsum.photos",
+          "blob:",
         ],
         "script-src": [
           "'self'",

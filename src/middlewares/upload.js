@@ -4,14 +4,17 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const base = path.join(
-      __dirname,
-      "..",
-      "..",
-      "public",
-      "images",
-      "settings"
-    );
+    const category = req.body.category;
+    let subfolder = "other-products";
+
+    if (category === "inner") {
+      subfolder = "inner-doors";
+    } else if (category === "main") {
+      subfolder = "main-doors";
+    }
+
+    const base = path.join(__dirname, "..", "public", "images", subfolder);
+
     fs.mkdirSync(base, { recursive: true });
     cb(null, base);
   },
@@ -34,7 +37,7 @@ function fileFilter(req, file, cb) {
 }
 
 const limits = {
-  fileSize: 2 * 1024 * 1024, // 2MB per file (adjustable)
+  fileSize: 2 * 1024 * 1024,
 };
 
 const upload = multer({ storage, fileFilter, limits });

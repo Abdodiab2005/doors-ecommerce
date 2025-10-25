@@ -7,6 +7,7 @@ function errorHandler(err, req, res, next) {
 
   // سجل الـ Error في كل الحالات
   logger.error("💥 ERROR:", err.stack);
+  console.error(err.stack);
 
   // 1. لو الطلب عايز JSON (زي API)
   if (req.accepts("json") && !req.accepts("html")) {
