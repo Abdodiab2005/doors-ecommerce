@@ -49,7 +49,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
-console.log(process.env.MONGODB_URI);
+
+app.set("trust proxy", 1); // لازم قبل تعريف الـ session
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "verysecretkey",
