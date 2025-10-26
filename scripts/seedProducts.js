@@ -1,34 +1,38 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const { faker } = require("@faker-js/faker");
-const connectDB = require("../src/config/db"); // [!!] اتأكد إن ده المسار الصح لملف db.js
-const Product = require("../src/models/Product.model"); // [!!] اتأكد إن ده المسار الصح للموديل
+const connectDB = require("../src/config/db");
+const Product = require("../src/models/Product.model");
 
-// تحميل متغيرات البيئة
 dotenv.config();
 
-/**
- * فانكشن بتولد منتج واحد عشوائي
- */
 function createRandomProduct() {
-  const productName = faker.commerce.productName() + " Door";
+  const nameEn = faker.commerce.productName() + " Door";
+  const nameHe = "דלת " + faker.commerce.productAdjective();
+  const descEn = faker.commerce.productDescription();
+  const descHe = "תיאור דלת: " + faker.commerce.productMaterial();
 
-  // توليد ألوان عشوائية (من 1 لـ 3 ألوان)
+  // ألوان المنتج
   const colors = [];
   const colorCount = faker.number.int({ min: 1, max: 3 });
   for (let i = 0; i < colorCount; i++) {
-    colors.push({
-      name: faker.color.human(),
-      hex: faker.color.rgb(),
-      image: faker.image.url({
-        category: "interiors",
-        width: 640,
-        height: 480,
-      }),
-    });
+    const colorName = faker.color.human();
+    const colorHex = faker.color.rgb();
+    const colorImages = [];
+    const colorImgCount = faker.number.int({ min: 1, max: 2 });
+    for (let j = 0; j < colorImgCount; j++) {
+      colorImages.push(
+        faker.image.url({
+          category: "interiors",
+          width: 640,
+          height: 480,
+        })
+      );
+    }
+    colors.push({ name: colorName, hex: colorHex, images: colorImages });
   }
 
-  // توليد صور عشوائية (من 2 لـ 4 صور)
+  // صور المنتج
   const images = [];
   const imageCount = faker.number.int({ min: 2, max: 4 });
   for (let i = 0; i < imageCount; i++) {
@@ -42,50 +46,41 @@ function createRandomProduct() {
   }
 
   return {
-    name: productName,
-    description: faker.commerce.productDescription(),
+    name: { en: nameEn, he: nameHe },
+    description: { en: descEn, he: descHe },
     price: faker.number.float({ min: 1500, max: 10000, precision: 0.01 }),
-    category: faker.helpers.arrayElement(["inner", "main"]), // بيختار واحدة من الـ enum
+    category: faker.helpers.arrayElement(["inner", "main"]),
     stock: faker.number.int({ min: 10, max: 150 }),
-    images: images,
-    colors: colors,
+    images,
+    colors,
   };
 }
 
-/**
- * الفانكشن الرئيسية للـ Seeder
- */
 const seedDB = async () => {
   try {
     console.log("Connecting to database...");
     await connectDB();
     console.log("Database connected.");
 
-    // 1. مسح كل المنتجات القديمة
     console.log("Deleting existing products...");
     await Product.deleteMany({});
     console.log("Products deleted.");
 
-    // 2. توليد 50 منتج جديد
     console.log("Generating 50 new products...");
-    const productsToSeed = [];
-    for (let i = 0; i < 50; i++) {
-      productsToSeed.push(createRandomProduct());
-    }
+    const productsToSeed = Array.from({ length: 50 }, () =>
+      createRandomProduct()
+    );
 
-    // 3. إضافة المنتجات الجديدة للداتابيز
     console.log("Inserting products into database...");
     await Product.insertMany(productsToSeed);
     console.log("✅ Database seeded successfully with 50 products!");
   } catch (error) {
     console.error("❌ Error seeding database:", error);
   } finally {
-    // 4. قفل الاتصال
     mongoose.connection.close();
     console.log("Database connection closed.");
     process.exit();
   }
 };
 
-// تشغيل الـ Seeder
 seedDB();

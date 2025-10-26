@@ -10,8 +10,7 @@
             onerror="this.src=`https:\/\/placehold.co/100x50/f87171/white?text=Logo`"
         /></a>
         <p class="text-sm leading-relaxed text-[#AAA8A3]">
-          متجر متخصص في عرض أفضل أنواع الأبواب الداخلية والخارجية بأجود الخامات
-          والتصميمات العصرية.
+          <%= __('footer.about') %>
         </p>
 
         <div class="flex gap-4 mt-6">
@@ -44,30 +43,36 @@
 
       <div class="grid grid-cols-2 gap-8 md:gap-6">
         <div>
-          <h3 class="text-lg font-semibold mb-4 text-white">روابط سريعة</h3>
+          <h3 class="text-lg font-semibold mb-4 text-white">
+            <%= __('footer.quick_links') %>
+          </h3>
           <ul class="space-y-3 text-sm">
             <li>
-              <a href="/" class="hover:text-white transition">الرئيسية</a>
+              <a href="/" class="hover:text-white transition"
+                ><%= __('nav.home') %></a
+              >
             </li>
             <li>
               <a
                 href="/products?category=inner"
                 class="hover:text-white transition"
-                >الأبواب الداخلية</a
+                ><%= __('nav.internal_doors') %></a
               >
             </li>
             <li>
               <a
                 href="/products?category=main"
                 class="hover:text-white transition"
-                >الأبواب الخارجية</a
+                ><%= __('nav.external_doors') %></a
               >
             </li>
           </ul>
         </div>
 
         <div>
-          <h3 class="text-lg font-semibold mb-4 text-white">تواصل معنا</h3>
+          <h3 class="text-lg font-semibold mb-4 text-white">
+            <%= __('footer.contact_us') %>
+          </h3>
           <ul class="space-y-4 text-sm">
             <li class="flex gap-3 items-center">
               <i class="fa-solid fa-envelope"></i>
@@ -89,7 +94,7 @@
                 rel="noopener noreferrer"
                 class="hover:text-white"
               >
-                واتساب
+                <%= __('footer.whatsapp') %>
               </a>
             </li>
           </ul>
@@ -100,7 +105,7 @@
     <div
       class="border-t border-[#ACA59B]/20 mt-10 py-4 text-center text-xs text-[#85817A]"
     >
-      © <%= new Date().getFullYear() %> DoorShop — جميع الحقوق محفوظة
+      <%= __('footer.rights_reserved', {year: new Date().getFullYear()}) %>
     </div>
   </div>
 </footer>

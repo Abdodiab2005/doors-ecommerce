@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 const SettingSchema = new mongoose.Schema(
   {
-    siteName: { type: String, default: "Leviro" },
+    siteName: {
+      en: String,
+      he: String,
+    },
     email: { type: String, default: "info@yourdomain.com" },
     phone: { type: String, default: "+201234567890" },
     whatsapp: { type: String }, // optional
@@ -16,12 +19,20 @@ const SettingSchema = new mongoose.Schema(
       logo: { type: String }, // path/url
       favicon: { type: String },
       slider: [{ type: String }], // array of image paths
-      innerDoorsImage: { type: String },
-      outerDoorsImage: { type: String },
+      innerDoorsImage: { type: String, default: "/images/inner.jpg" },
+      outerDoorsImage: { type: String, default: "/images/outer.jpg" },
     },
     meta: {
-      title: { type: String },
-      description: { type: String },
+      title: {
+        en: String,
+        he: String,
+      },
+      description: {
+        en: String,
+        he: String,
+      },
+      keywords: { en: { type: String }, he: { type: String } },
+      author: { en: { type: String }, he: { type: String } },
     },
   },
   { collection: "settings", timestamps: true }

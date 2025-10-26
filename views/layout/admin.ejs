@@ -6,6 +6,15 @@
     <title><%= title || 'Admin Panel' %></title>
     <meta name="csp-restrict-eval" content="true" />
 
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#000000" />
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/js/service-worker.js");
+      }
+    </script>
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"

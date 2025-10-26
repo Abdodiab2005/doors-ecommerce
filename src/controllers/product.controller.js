@@ -10,6 +10,8 @@ function escapeRegex(string) {
 }
 
 exports.getProductById = async (req, res, next) => {
+  const lang = req.lang || "en";
+
   try {
     const { id } = req.params;
     const product = await Product.findById(id);
@@ -20,6 +22,7 @@ exports.getProductById = async (req, res, next) => {
       layout: "layout/main",
       description: product.description,
       product,
+      lang,
     });
   } catch (error) {
     logger.error("Error fetching product:", error);
@@ -28,20 +31,19 @@ exports.getProductById = async (req, res, next) => {
 };
 
 exports.getAllProducts = async (req, res, next) => {
+  const lang = req.lang || "en";
+
   try {
     const { page, limit, skip } = req.pagination;
     const { category, q } = req.query;
 
     const filter = {};
-
-    if (category) {
-      filter.category = category;
-    }
+    if (category) filter.category = category;
 
     if (q) {
       filter.$or = [
-        { name: { $regex: q, $options: "i" } },
-        { description: { $regex: q, $options: "i" } },
+        { [`name.${lang}`]: { $regex: q, $options: "i" } },
+        { [`description.${lang}`]: { $regex: q, $options: "i" } },
       ];
     }
 
@@ -52,48 +54,70 @@ exports.getAllProducts = async (req, res, next) => {
 
     const totalPages = Math.ceil(total / limit);
 
-    let title = "All Products";
-    let description = "All Products";
+    // ترجمة أسماء الكاتيجوريز
+    const categoryNames = {
+      inner: { en: "inner", he: "פנימיות" },
+      main: { en: "main", he: "חיצוניות" },
+    };
 
+    let title = lang === "he" ? "כל המוצרים" : "All Products";
+    let description = lang === "he" ? "כל המוצרים בחנות" : "All Products";
+
+    let catName;
     if (category) {
-      title = `${category} Products`;
-      description = `Browse ${category} products`;
+      catName = categoryNames[category]?.[lang] || category;
+      title = `${catName} ${lang === "he" ? "דלתות" : "Doors"}`;
+      description =
+        lang === "he"
+          ? `עיין בדלתות ${catName}`
+          : `Browse our ${catName} doors`;
     }
 
     if (q) {
-      title = `Search results for: "${q}"`;
-      description = `Showing products matching "${q}"`;
+      title =
+        lang === "he"
+          ? `תוצאות חיפוש עבור "${q}"`
+          : `Search results for "${q}"`;
+      description =
+        lang === "he"
+          ? `מציג מוצרים תואמים ל-"${q}"`
+          : `Showing products matching "${q}"`;
     }
 
     if (category && q) {
-      title = `Search for "${q}" in ${category}`;
+      title =
+        lang === "he"
+          ? `חיפוש "${q}" בקטגוריית ${catName}`
+          : `Search for "${q}" in ${catName}`;
     }
 
     const categories = [
       {
-        name: "All",
-        url: "/products",
+        en: { name: "All", url: "/products" },
+        he: { name: "הכל", url: "/products" },
       },
       {
-        name: "inner",
-        url: "/products?category=inner",
+        en: { name: "inner", url: "/products?category=inner" },
+        he: { name: "פנימיות", url: "/products?category=inner" },
       },
       {
-        name: "main",
-        url: "/products?category=main",
+        en: { name: "main", url: "/products?category=main" },
+        he: { name: "חיצוניות", url: "/products?category=main" },
       },
     ];
 
     res.render("products", {
       layout: "layout/main",
-      title: title,
-      description: description,
+      title,
+      description,
       products,
       currentPage: page,
       totalPages,
-      currentCategory: category || null,
+      currentCategory: catName || { en: "All", he: "הכל" }[lang],
+      enCatName: category ? categoryNames[category]?.en : null,
       categories,
       searchQuery: q || null,
+      lang,
     });
   } catch (error) {
     logger.error("Error fetching products:", error);

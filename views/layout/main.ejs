@@ -6,6 +6,15 @@
     <title><%= title || 'Doors Shop' %></title>
     <meta name="csp-restrict-eval" content="true" />
 
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#000000" />
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/js/service-worker.js");
+      }
+    </script>
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
@@ -70,7 +79,7 @@
       };
     </script>
   </head>
-  <body class="bg-[#DED9D3] text-[#242425]">
+  <body class="bg-white text-[#242425]">
     <%- include('../partials/header') %>
     <main class="container mx-auto pt-[72px] px-4 lg:px-6"><%- body %></main>
     <%- include('../partials/footer') %>

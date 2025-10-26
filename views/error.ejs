@@ -3,15 +3,15 @@
 >
   <h1 class="text-6xl font-bold mb-4"><%= statusCode || 500 %></h1>
   <h2 class="text-2xl font-semibold mb-2">
-    <%= message || 'Something went wrong' %>
+    <%= message || __('error.something_went_wrong') %>
   </h2>
   <p class="text-[#ACA59B] mb-6">
-    <%= description || 'We’re sorry, but an unexpected error occurred.' %>
+    <%= description || __('error.unexpected_error') %>
   </p>
   <a
     href="/"
     class="px-6 py-3 bg-black text-white rounded-lg hover:bg-[#242425] transition"
   >
-    Back to Home
+    <%= __('error.back_to_home') %>
   </a>
 </main>

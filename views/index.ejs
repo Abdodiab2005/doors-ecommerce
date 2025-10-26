@@ -10,6 +10,9 @@
   .glass:hover {
     transform: translateY(-10px) scale(1.02);
   }
+  html {
+    scroll-behavior: smooth;
+  }
 </style>
 
 <!-- Hero Section -->
@@ -24,17 +27,16 @@
 >
   <div class="relative z-10 text-white max-w-3xl px-4 animate-fade-in">
     <h1 class="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">
-      Elegance at Your Entrance
+      <%= __('index.hero_title') %>
     </h1>
     <p class="text-base md:text-lg opacity-90">
-      Discover our collection of premium interior and exterior doors, crafted to
-      elevate your space.
+      <%= __('index.hero_subtitle') %>
     </p>
   </div>
 </section>
 
 <!-- Features Section -->
-<section class="py-20 px-6 md:px-12 bg-[#DED9D3] text-[#242425]">
+<!-- <section class="py-20 px-6 md:px-12 bg-[#DED9D3] text-[#242425]">
   <div class="max-w-6xl mx-auto text-center mb-12">
     <h2 class="text-3xl font-bold mb-4">Why Choose Us?</h2>
     <p class="text-[#ACA59B]">
@@ -43,8 +45,8 @@
     </p>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-6xl mx-auto">
-    <% if (features && features.length > 0) { %> <% features.forEach(feature =>
+   <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-6xl mx-auto">
+    <%# if (features && features.length > 0) { %> <%# features.forEach(feature =>
     { %>
 
     <div
@@ -53,20 +55,20 @@
       <div
         class="w-16 h-16 flex items-center justify-center rounded-full bg-[#242425] text-white mb-6"
       >
-        <i class="<%= feature.icon %> text-2xl"></i>
+        <i class="<%# feature.icon %> text-2xl"></i>
       </div>
 
-      <h3 class="text-xl font-semibold mb-3"><%= feature.title %></h3>
+      <h3 class="text-xl font-semibold mb-3"><%# feature.title %></h3>
 
-      <p class="text-[#ACA59B] text-sm"><%= feature.description %></p>
+      <p class="text-[#ACA59B] text-sm"><%# feature.description %></p>
     </div>
 
-    <% }) %> <% } %>
+    <%# }) %> <%# } %>
   </div>
-</section>
+</section> -->
 
 <!-- Categories Section -->
-<section class="py-20 px-6 md:px-12 lg:px-24 bg-base-100">
+<section class="py-20 px-6 md:px-12 lg:px-24">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
     <!-- Internal Doors -->
     <a
@@ -75,16 +77,18 @@
     >
       <div
         class="h-80 bg-center bg-cover"
-        style="background-image: url('/images/inner.jpg')"
+        style="
+          background-image: url('<%= settings?.assets?.innerDoorsImage %>');
+        "
       ></div>
       <div class="p-8 text-center">
         <h3
           class="text-2xl font-bold text-primary group-hover:text-black transition-colors"
         >
-          Internal Doors
+          <%= __('index.internal_doors_title') %>
         </h3>
         <p class="text-secondary mt-2">
-          Refined designs to complement your home’s aesthetic.
+          <%= __('index.internal_doors_subtitle') %>
         </p>
       </div>
     </a>
@@ -96,16 +100,18 @@
     >
       <div
         class="h-80 bg-center bg-cover"
-        style="background-image: url('/images/outdoor.jpeg')"
+        style="
+          background-image: url('<%= settings?.assets?.outerDoorsImage %>');
+        "
       ></div>
       <div class="p-8 text-center">
         <h3
           class="text-2xl font-bold text-primary group-hover:text-black transition-colors"
         >
-          External Doors
+          <%= __('index.external_doors_title') %>
         </h3>
         <p class="text-secondary mt-2">
-          Durable and secure doors that make a statement.
+          <%= __('index.external_doors_subtitle') %>
         </p>
       </div>
     </a>
@@ -113,32 +119,34 @@
 </section>
 
 <!-- Contact Section -->
-<section class="py-20 bg-base-100 text-center">
-  <h2 class="text-3xl font-bold mb-4 text-primary">Get in Touch</h2>
-  <p class="text-secondary mb-10">
-    We're here to help you find the perfect door.
-  </p>
+<section class="py-20 text-center" id="contact">
+  <h2 class="text-3xl font-bold mb-4 text-primary">
+    <%= __('index.get_in_touch') %>
+  </h2>
+  <p class="text-secondary mb-10"><%= __('index.get_in_touch_subtitle') %></p>
 
   <div class="flex flex-col sm:flex-row justify-center gap-4 flex-wrap">
     <a
       href="tel:+201234567890"
       class="flex items-center justify-center gap-2 min-w-[200px] h-14 px-6 bg-primary text-white rounded-xl hover:scale-105 transition-transform"
     >
-      <i class="fa-solid fa-phone text-xl"></i> Call Us
+      <i class="fa-solid fa-phone text-xl"></i> <%= __('index.call_us') %>
     </a>
 
     <a
       href="https://wa.me/201234567890"
       class="flex items-center justify-center gap-2 min-w-[200px] h-14 px-6 bg-primary text-white rounded-xl hover:scale-105 transition-transform"
     >
-      <i class="fa-brands fa-whatsapp text-xl"></i> Message on WhatsApp
+      <i class="fa-brands fa-whatsapp text-xl"></i> <%=
+      __('index.message_on_whatsapp') %>
     </a>
 
     <a
       href="mailto:info@yourdomain.com"
       class="flex items-center justify-center gap-2 min-w-[200px] h-14 px-6 bg-primary text-white rounded-xl hover:scale-105 transition-transform"
     >
-      <i class="fa-solid fa-envelope text-xl"></i> Send an Email
+      <i class="fa-solid fa-envelope text-xl"></i> <%= __('index.send_an_email')
+      %>
     </a>
   </div>
 </section>

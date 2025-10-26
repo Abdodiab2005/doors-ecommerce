@@ -1,33 +1,48 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const connectDB = require("../src/config/db"); // [!!] اتأكد إن المسار صح
-const Settings = require("../src/models/Setting.model"); // [!!] اتأكد إن المسار صح
+const connectDB = require("../src/config/db");
+const Setting = require("../src/models/Setting.model");
 
 dotenv.config();
 
-// [!!] الداتا الافتراضية (مطابقة للـ Schema بالظبط)
 const defaultSettings = {
-  // الحقول الأساسية (مطابقة للـ Schema)
-  siteName: "DoorShop", // بدلاً من "Leviro" الافتراضي
+  siteName: {
+    en: "DoorShop",
+    he: "דורשופ",
+  },
   email: "info@doorshop.com",
   phone: "+02 123 456 7890",
   whatsapp: "+02 123 456 7890",
-
-  // الحقول المتشعبة (Nested)
   social: {
     facebook: "https://facebook.com/doorshop",
     instagram: "https://instagram.com/doorshop",
-    twitter: "https://x.com/doorshop", // مطابق للـ Schema
-    // tiktok هياخد القيمة الافتراضية (null/undefined)
+    twitter: "https://x.com/doorshop",
+    tiktok: "https://tiktok.com/@doorshop",
   },
   assets: {
     logo: "/images/logo.jpg",
     favicon: "/images/favicon.ico",
-    // 'slider', 'innerDoorsImage', 'outerDoorsImage' هياخدوا الافتراضي
+    slider: "/images/hero.jpg",
+    innerDoorsImage: "/images/inner.jpg",
+    outerDoorsImage: "/images/outdoor.jpeg",
   },
   meta: {
-    title: "DoorShop - Quality Doors",
-    description: "Find the best doors for your home.",
+    title: {
+      en: "DoorShop - Quality Doors",
+      he: "דורשופ - דלתות איכות",
+    },
+    description: {
+      en: "Find the best doors for your home.",
+      he: "מצא את הדלתות הטובות ביותר לבית שלך.",
+    },
+    keyword: {
+      en: "Doors, E-commerce shop, Doors shop, Doors store",
+      he: "דלתות, חנות, חנות דלתות, חנות דלתות",
+    },
+    author: {
+      en: "DoorShop",
+      he: "דורשופ",
+    },
   },
 };
 
@@ -38,15 +53,11 @@ const seedSettings = async () => {
     console.log("Database connected.");
 
     console.log("Seeding/Updating default settings...");
-
-    // [!!] هنا التعديل
-    // 1. استخدمنا query فاضي {} عشان نضمن إنه مستند واحد
-    // 2. استخدمنا الكائن defaultSettings الصحيح
-    await Settings.findOneAndUpdate(
-      {}, // Query: ابحث عن أول مستند (الوحيد)
-      defaultSettings, // Data: استخدم الداتا المطابقة للـ Schema
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
+    await Setting.findOneAndUpdate({}, defaultSettings, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true,
+    });
 
     console.log("✅ Default settings have been created/updated!");
   } catch (error) {
@@ -58,5 +69,4 @@ const seedSettings = async () => {
   }
 };
 
-// تشغيل الـ Seeder
 seedSettings();

@@ -10,10 +10,10 @@
     <div
       class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4"
     >
-      <h1 class="text-3xl font-bold text-neutral">Products Management</h1>
+      <h1 class="text-3xl font-bold text-neutral"><%= __('admin.products.title') %></h1>
       <button @click="openAddModal" class="btn btn-primary">
         <i class="fa-solid fa-plus"></i>
-        Add Product
+        <%= __('admin.products.add_product') %>
       </button>
     </div>
 
@@ -26,7 +26,7 @@
         <input
           type="text"
           x-model.debounce.500ms="search"
-          placeholder="Search by product name..."
+          placeholder="<%= __('admin.products.search_placeholder') %>"
           class="input input-bordered w-full pl-10 pr-10 bg-white border-2 border-neutral focus:border-primary"
         />
 
@@ -42,11 +42,11 @@
       <table class="table w-full">
         <thead class="bg-secondary text-neutral font-semibold">
           <tr>
-            <th class="p-4">Name</th>
-            <th class="p-4">Category</th>
-            <th class="p-4">Price</th>
-            <th class="p-4">Stock</th>
-            <th class="p-4">Actions</th>
+            <th class="p-4"><%= __('admin.products.name') %></th>
+            <th class="p-4"><%= __('admin.products.category') %></th>
+            <th class="p-4"><%= __('admin.products.price') %></th>
+            <th class="p-4"><%= __('admin.products.stock') %></th>
+            <th class="p-4"><%= __('admin.products.actions') %></th>
           </tr>
         </thead>
         <tbody>
@@ -75,14 +75,14 @@
                   class="btn btn-sm btn-secondary"
                 >
                   <i class="fa-solid fa-pen-to-square"></i>
-                  Edit
+                  <%= __('admin.products.edit') %>
                 </button>
                 <button
                   @click.stop="confirmDelete(product._id)"
                   class="btn btn-sm btn-error"
                 >
                   <i class="fa-solid fa-trash-can"></i>
-                  Delete
+                  <%= __('admin.products.delete') %>
                 </button>
               </td>
             </tr>
@@ -100,7 +100,7 @@
         class="join-item btn btn-secondary"
       >
         <i class="fa-solid fa-arrow-left"></i>
-        Prev
+        <%= __('admin.products.prev') %>
       </button>
 
       <!-- Pagination Numbers -->
@@ -127,7 +127,7 @@
         :disabled="!pagination.hasNextPage"
         class="join-item btn btn-primary"
       >
-        Next
+        <%= __('admin.products.next') %>
         <i class="fa-solid fa-arrow-right"></i>
       </button>
     </div>
@@ -142,7 +142,7 @@
       </form>
       <h3
         class="font-bold text-2xl text-neutral mb-5"
-        x-text="editMode ? 'Edit Product' : 'Add New Product'"
+        x-text="editMode ? '<%= __("admin.products.edit_product") %>' : '<%= __("admin.products.add_new_product") %>'"
       ></h3>
 
       <form
@@ -152,7 +152,7 @@
       >
         <div class="form-control">
           <label class="label">
-            <span class="label-text">Name</span>
+            <span class="label-text"><%= __('admin.products.name') %></span>
           </label>
           <input
             type="text"
@@ -163,7 +163,7 @@
         </div>
         <div class="form-control">
           <label class="label">
-            <span class="label-text">Description</span>
+            <span class="label-text"><%= __('admin.products.description') %></span>
           </label>
           <textarea
             x-model="form.description"
@@ -175,7 +175,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="form-control">
             <label class="label">
-              <span class="label-text">Price</span>
+              <span class="label-text"><%= __('admin.products.price') %></span>
             </label>
             <input
               type="number"
@@ -187,7 +187,7 @@
           </div>
           <div class="form-control">
             <label class="label">
-              <span class="label-text">Stock</span>
+              <span class="label-text"><%= __('admin.products.stock') %></span>
             </label>
             <input
               type="number"
@@ -197,16 +197,16 @@
           </div>
           <div class="form-control">
             <label class="label">
-              <span class="label-text">Category</span>
+              <span class="label-text"><%= __('admin.products.category') %></span>
             </label>
             <select
               x-model="form.category"
               class="select select-bordered w-full bg-white border-2 border-neutral"
               required
             >
-              <option value="" disabled>Select...</option>
-              <option value="inner">Interior</option>
-              <option value="main">Exterior</option>
+              <option value="" disabled><%= __('admin.products.select') %></option>
+              <option value="inner"><%= __('admin.products.interior') %></option>
+              <option value="main"><%= __('admin.products.exterior') %></option>
             </select>
           </div>
         </div>
@@ -215,10 +215,10 @@
 
         <div class="form-control">
           <label class="label">
-            <span class="label-text font-medium">Default Images</span>
+            <span class="label-text font-medium"><%= __('admin.products.default_images') %></span>
           </label>
           <p class="text-xs text-gray-500 mb-2">
-            These images show if no color is selected.
+            <%= __('admin.products.default_images_help') %>
           </p>
           <input
             type="file"
@@ -244,17 +244,17 @@
 
         <div>
           <div class="flex justify-between items-center mb-2">
-            <h3 class="text-lg font-medium text-gray-700">Manage Colors</h3>
+            <h3 class="text-lg font-medium text-gray-700"><%= __('admin.products.manage_colors') %></h3>
             <button
               type="button"
               @click="addColor"
               class="btn btn-sm btn-secondary"
             >
-              + Add Color
+              <%= __('admin.products.add_color') %>
             </button>
           </div>
           <p class="text-xs text-gray-500 mb-3">
-            Add colors and link specific images to them.
+            <%= __('admin.products.add_color_help') %>
           </p>
 
           <div class="space-y-4">
@@ -265,7 +265,7 @@
                     <input
                       type="text"
                       x-model="color.name"
-                      placeholder="Color Name (e.g., Dark Blue)"
+                      placeholder="<%= __('admin.products.color_name_placeholder') %>"
                       class="input input-sm w-full bg-white border-2 border-neutral"
                       required
                     />
@@ -273,7 +273,7 @@
                       <input
                         type="text"
                         x-model="color.hex"
-                        placeholder="Hex Code (#242425)"
+                        placeholder="<%= __('admin.products.hex_code_placeholder') %>"
                         class="input input-sm w-full bg-white border-2 border-neutral"
                         required
                       />
@@ -288,7 +288,7 @@
                       @click="removeColor(index)"
                       class="btn btn-sm btn-error btn-outline w-full md:w-auto"
                     >
-                      Remove
+                      <%= __('admin.products.remove') %>
                     </button>
                   </div>
                   <input
@@ -313,12 +313,12 @@
 
         <div class="modal-action mt-6">
           <form method="dialog">
-            <button class="btn btn-ghost">Cancel</button>
+            <button class="btn btn-ghost"><%= __('admin.products.cancel') %></button>
           </form>
           <button
             type="submit"
             class="btn btn-primary"
-            x-text="editMode ? 'Update Product' : 'Add Product'"
+            x-text="editMode ? '<%= __("admin.products.update_product") %>' : '<%= __("admin.products.add_product") %>'"
           ></button>
         </div>
       </form>
@@ -327,16 +327,16 @@
 
   <dialog x-ref="deleteModal" class="modal">
     <div class="modal-box bg-white">
-      <h3 class="font-bold text-lg text-neutral">Are you sure?</h3>
+      <h3 class="font-bold text-lg text-neutral"><%= __('admin.products.are_you_sure') %></h3>
       <p class="py-4">
-        Do you really want to delete this product? This cannot be undone.
+        <%= __('admin.products.delete_confirmation') %>
       </p>
       <div class="modal-action">
         <form method="dialog">
-          <button class="btn btn-ghost">Cancel</button>
+          <button class="btn btn-ghost"><%= __('admin.products.cancel') %></button>
         </form>
         <button @click="deleteProduct" class="btn btn-error">
-          Yes, Delete
+          <%= __('admin.products.yes_delete') %>
         </button>
       </div>
     </div>
@@ -363,25 +363,25 @@
           >
             <i class="fa-solid fa-eye"></i>
 
-            View Product
+            <%= __('admin.products.view_product') %>
           </a>
           <p class="text-gray-600" x-text="selectedProduct.description"></p>
 
           <div class="flex flex-wrap gap-4">
             <div class="badge badge-lg badge-secondary text-white">
-              Price: $<span x-text="selectedProduct.price"></span>
+              <%= __('admin.products.price_label') %> $<span x-text="selectedProduct.price"></span>
             </div>
             <div class="badge badge-lg badge-outline">
-              Stock: <span x-text="selectedProduct.stock"></span>
+              <%= __('admin.products.stock_label') %> <span x-text="selectedProduct.stock"></span>
             </div>
             <div class="badge badge-lg badge-outline">
-              Category: <span x-text="selectedProduct.category"></span>
+              <%= __('admin.products.category_label') %> <span x-text="selectedProduct.category"></span>
             </div>
           </div>
 
           <div class="divider"></div>
 
-          <h4 class="text-lg font-medium">Default Images</h4>
+          <h4 class="text-lg font-medium"><%= __('admin.products.default_images') %></h4>
           <div class="carousel w-full bg-base-200/50 rounded-box h-64">
             <template x-for="(img, i) in selectedProduct.images" :key="i">
               <div :id="'slide' + i" class="carousel-item relative w-full">
@@ -406,13 +406,13 @@
               x-show="selectedProduct.images.length === 0"
               class="w-full flex items-center justify-center"
             >
-              <span class="text-gray-500">No default images available.</span>
+              <span class="text-gray-500"><%= __('admin.products.no_default_images') %></span>
             </div>
           </div>
 
           <div class="divider"></div>
 
-          <h4 class="text-lg font-medium">Available Colors</h4>
+          <h4 class="text-lg font-medium"><%= __('admin.products.available_colors') %></h4>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <template
               x-for="(color, c_idx) in selectedProduct.colors"
@@ -459,7 +459,7 @@
                       class="w-full flex items-center justify-center"
                     >
                       <span class="text-gray-500 text-sm"
-                        >No images for this color.</span
+                        ><%= __('admin.products.no_images_for_color') %></span
                       >
                     </div>
                   </div>
@@ -470,7 +470,7 @@
               x-show="selectedProduct.colors.length === 0"
               class="md:col-span-2 text-center text-gray-500 py-4"
             >
-              <span>No specific colors defined.</span>
+              <span><%= __('admin.products.no_specific_colors') %></span>
             </div>
           </div>
         </div>
