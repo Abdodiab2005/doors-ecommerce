@@ -1,4 +1,5 @@
 const Admin = require("../models/Admin.model");
+const { success } = require("../utils/response");
 
 exports.renderLoginPage = (req, res) => {
   res.render("admin/login", {
@@ -25,6 +26,5 @@ exports.login = async (req, res) => {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24,
   });
-
-  res.redirect("/admin");
+  success(res, "Logged in successfully");
 };

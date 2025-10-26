@@ -20,14 +20,14 @@ const seedAdmin = async () => {
 
     console.log("Seeding/Updating default Admin...");
 
-    // [!!] هنا الشغل
-    // بنستخدم "upsert" عشان نضمن إنه صف واحد بس
-    await Admin.findOneAndUpdate(
-      {},
-      AdminData, // Data: حط الداتا دي
-      // Options: لو ملقتهوش اعمله، ورجع الجديد
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
+    let admin = await Admin.findOne({ username: AdminData.username });
+
+    if (admin) {
+      // نحذف القديم وننشئ من جديد لضمان التشفير النضيف
+      await Admin.deleteMany({});
+    }
+
+    await Admin.create(AdminData);
 
     console.log("✅ Default Admin have been created/updated!");
   } catch (error) {

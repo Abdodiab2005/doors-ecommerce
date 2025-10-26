@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/admin.controller");
 const upload = require("../middlewares/upload");
+const { requireAuth } = require("../middlewares/auth.middleware");
+
+router.use(requireAuth);
 
 router.get("/dashboard", adminController.renderDashboardPage);
 router.get("/products", adminController.renderProductsPage);

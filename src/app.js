@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const expressEjsLayouts = require("express-ejs-layouts");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const MongoStore = require("connect-mongo");
 
 // استيراد الـ Handlers من ملفاتهم
 const notFoundHandler = require("./middlewares/notFound");
@@ -48,6 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
+console.log(process.env.MONGODB_URI);
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "verysecretkey",
@@ -58,6 +60,9 @@ app.use(
       secure: process.env.NODE_ENV === "production",
       maxAge: 1000 * 60 * 60 * 24, // يوم كامل
     },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+    }),
   })
 );
 
@@ -71,8 +76,8 @@ app.use(setLocals);
 app.use(globalSettings);
 app.use("/", require("./routes/home.routes"));
 app.use("/products", require("./routes/product.routes"));
-app.use("/admin", require("./routes/admin.routes"));
 app.use("/admin", require("./routes/auth.routes"));
+app.use("/admin", require("./routes/admin.routes"));
 app.use("/admin", require("./routes/settings.routes"));
 
 // --- 4. Error Handling ---

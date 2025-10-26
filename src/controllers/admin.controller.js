@@ -19,12 +19,12 @@ exports.renderLoginPage = (req, res) => {
 
 exports.renderDashboardPage = async (req, res) => {
   try {
+    const settingsDoc = await Settings.findOne().sort({ updatedAt: -1 });
     const stats = {
       totalProducts: await Product.countDocuments(),
-      innerCount: await Product.countDocuments({ type: "inner" }),
-      mainCount: await Product.countDocuments({ type: "main" }),
-      settingsUpdatedAt: await Settings.findOne().sort({ updatedAt: -1 })
-        .updatedAt,
+      innerCount: await Product.countDocuments({ category: "inner" }),
+      mainCount: await Product.countDocuments({ category: "main" }),
+      settingsUpdatedAt: settingsDoc ? settingsDoc.updatedAt : null,
     };
     res.render("admin/dashboard", {
       title: "Admin Dashboard",

@@ -6,9 +6,11 @@ function requireAuth(req, res, next) {
   next();
 }
 
-// يمنع الأدمن اللي داخل من الدخول لصفحة تسجيل الدخول مرة تانية
 function redirectIfAuth(req, res, next) {
-  if (req.session.admin) {
+  console.log("Session:", req.session);
+  console.log("Admin:", req.session.admin);
+
+  if (req.session && req.session.admin) {
     return res.redirect("/admin/dashboard");
   }
   next();
