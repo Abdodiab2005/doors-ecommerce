@@ -3,6 +3,12 @@ const logger = require("../utils/logger");
 const AppError = require("../utils/AppError");
 const { success } = require("../utils/response");
 
+// ترجمة أسماء الكاتيجوريز
+const categoryNames = {
+  inner: { en: "inner", he: "פנימיות" },
+  main: { en: "main", he: "חיצוניות" },
+};
+
 function escapeRegex(string) {
   // $& تعني "كل النص الذي تطابق"
   // هذا الكود يجد أي حرف خاص بالـ regex ويضع قبله \
@@ -18,11 +24,12 @@ exports.getProductById = async (req, res, next) => {
     if (!product) return next(new AppError("Product not found", 404));
 
     res.render("product", {
-      title: product.name,
+      title: product.name[lang],
       layout: "layout/main",
-      description: product.description,
+      description: product.description[lang],
       product,
       lang,
+      category: categoryNames[product.category]?.[lang],
     });
   } catch (error) {
     logger.error("Error fetching product:", error);
@@ -53,12 +60,6 @@ exports.getAllProducts = async (req, res, next) => {
     ]);
 
     const totalPages = Math.ceil(total / limit);
-
-    // ترجمة أسماء الكاتيجوريز
-    const categoryNames = {
-      inner: { en: "inner", he: "פנימיות" },
-      main: { en: "main", he: "חיצוניות" },
-    };
 
     let title = lang === "he" ? "כל המוצרים" : "All Products";
     let description = lang === "he" ? "כל המוצרים בחנות" : "All Products";

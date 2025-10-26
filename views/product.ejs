@@ -39,9 +39,9 @@
       class="text-3xl md:text-4xl font-bold mb-3 text-neutral-800 flex items-start justify-between"
     >
       <div>
-        <div><%= product.name %></div>
+        <div><%= product.name[lang] %></div>
         <span class="text-xs text-primary bg-secondary px-2 py-1 rounded-full">
-          <i class="fa-solid fa-tag"></i> <%= product.category %>
+          <i class="fa-solid fa-tag"></i> <%= category %>
         </span>
       </div>
 
@@ -59,8 +59,8 @@
 
         // [تم التعديل هنا]: حذف علامات التنصيص " " الإضافية
         const shareData = {
-          title: <%- JSON.stringify(product.name) %>,
-          text: <%- JSON.stringify(product.description) %>,
+          title: <%- JSON.stringify(product.name[lang]) %>,
+          text: <%- JSON.stringify(product.description[lang]) %>,
           url: window.location.href,
         };
 
@@ -86,13 +86,13 @@
     </script>
 
     <p class="text-base text-neutral-400 mb-6 leading-relaxed">
-      <%= product.description %>
+      <%= product.description[lang] %>
     </p>
 
     <!-- اختيار اللون -->
     <div class="mb-8">
-      <label class="text-sm font-semibold text-neutral-800 mb-2 block"
-        > <%= __('product.available_colors') %></label
+      <label class="text-sm font-semibold text-neutral-800 mb-2 block"></label>
+        <%= __('product.available_colors') %></label
       >
       <div class="flex flex-wrap items-center gap-3">
         <% for (let color of product.colors) { %>
