@@ -11,7 +11,7 @@
     "quick_links": "קישורים מהירים",
     "contact_us": "צור קשר",
     "whatsapp": "וואטסאפ",
-    "rights_reserved": "© <%= new Date().getFullYear() %> DoorShop — כל הזכויות שמורות"
+    "rights_reserved": "© {{ fullYear }} DoorShop — כל הזכויות שמורות"
   },
   "index": {
     "hero_title": "אלגנטיות בכניסה שלך",
@@ -30,7 +30,7 @@
   },
   "products": {
     "our_doors_collection": "קולקציית הדלתות שלנו",
-    "showing_results": "מציג <%= products.length %> תוצאות עבור \"<%= searchQuery %>\"",
+    "showing_results": "מציג {{ length }} תוצאות עבור \"{{ searchQuery }}\"",
     "view_details": "צפה בפרטים",
     "no_products_found": "לא נמצאו מוצרים.",
     "page": "עמוד",
@@ -150,7 +150,7 @@
       "logout": "התנתק"
     },
     "footer": {
-      "rights_reserved": "© <%= new Date().getFullYear() %> ניהול אתר — כל הזכויות שמורות."
+      "rights_reserved": "© {{ fullYear }} ניהול אתר — כל הזכויות שמורות."
     }
   },
   "search": {

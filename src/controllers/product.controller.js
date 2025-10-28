@@ -149,7 +149,10 @@ exports.getSuggestions = async (req, res, next) => {
     const sanitizedQuery = escapeRegex(queryTerm);
 
     const products = await Product.find({
-      name: { $regex: sanitizedQuery, $options: "i" },
+      $or: [
+        { "name.en": { $regex: sanitizedQuery, $options: "i" } },
+        { "name.he": { $regex: sanitizedQuery, $options: "i" } },
+      ],
     })
       .select("name _id")
       .limit(10);

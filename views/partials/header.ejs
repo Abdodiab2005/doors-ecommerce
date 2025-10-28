@@ -113,9 +113,12 @@
                 @click.prevent="navigateToSuggestion(suggestion)"
                 class="block px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
               >
-                <span x-text="suggestion.name"></span>
+                <span x-text="suggestion.name['<%= lang %>']"></span>
               </a>
             </template>
+            <script>
+              console.log("<%=  lang %>");
+            </script>
 
             <div
               x-show="!isLoading && searchQuery.length > 0 && suggestions.length === 0"

@@ -29,9 +29,9 @@
     </div>
 
     <% if (searchQuery) { %>
+    <!-- prettier-ignore -->
     <p class="text-center text-neutral-400 mb-4">
-      <%= __('products.showing_results', { products: products.length,
-      searchQuery: searchQuery }) %>
+      <%= __('products.showing_results', { length: products.length, searchQuery: searchQuery }) %>
     </p>
     <% } %>
 

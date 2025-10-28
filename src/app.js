@@ -119,10 +119,4 @@ app.use(notFoundHandler);
 // Global Error Handler (الوحيد)
 app.use(errorHandler);
 
-console.log("i18n looking for locales in:", path.join(__dirname, "../locales"));
-console.log(
-  "File exists?",
-  require("fs").existsSync(path.join(__dirname, "../locales/en.json"))
-);
-
 module.exports = app;
