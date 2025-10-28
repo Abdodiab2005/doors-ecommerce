@@ -51,11 +51,12 @@
         x-transition:leave-start="opacity-100 transform scale-100"
         x-transition:leave-end="opacity-0 transform scale-90"
       >
-        <figure class="aspect-4/3 bg-base-200">
+        <figure class="aspect-4/3 bg-white">
           <img
             src="<%= product.images[0] %>"
             alt="<%= product.name[lang] %>"
-            class="w-full h-full object-cover"
+            class="w-[200px] h-[200px] object-cover"
+            loading="lazy"
           />
         </figure>
 

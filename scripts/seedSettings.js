@@ -10,9 +10,9 @@ const defaultSettings = {
     en: "DoorShop",
     he: "דורשופ",
   },
-  email: "info@doorshop.com",
-  phone: "+02 123 456 7890",
-  whatsapp: "+02 123 456 7890",
+  email: "khalil.nawas143@gmail.com",
+  phone: "0528800701",
+  whatsapp: "+972528800701",
   social: {
     facebook: "https://facebook.com/doorshop",
     instagram: "https://instagram.com/doorshop",
@@ -20,7 +20,7 @@ const defaultSettings = {
     tiktok: "https://tiktok.com/@doorshop",
   },
   assets: {
-    logo: "/images/logo.jpg",
+    logo: "/images/logo.png",
     favicon: "/images/favicon.ico",
     slider: "/images/hero.jpg",
     innerDoorsImage: "/images/inner.jpg",
