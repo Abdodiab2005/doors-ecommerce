@@ -2,18 +2,24 @@
   <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
     <a href="/admin/dashboard" class="flex items-center gap-2">
       <img src="<%= settings?.assets?.logo %>" alt="Logo" class="h-8 w-auto" />
-      <span class="font-semibold text-gray-800">لوحة التحكم</span>
+      <span class="font-semibold text-gray-800"
+        ><%= __('admin.header.dashboard') %></span
+      >
     </a>
 
     <nav class="flex items-center gap-4">
-      <a href="/admin/products" class="hover:text-black">المنتجات</a>
-      <a href="/admin/settings" class="hover:text-black">الإعدادات</a>
+      <a href="/admin/products" class="hover:text-black"
+        ><%= __('admin.header.products') %></a
+      >
+      <a href="/admin/settings" class="hover:text-black"
+        ><%= __('admin.header.settings') %></a
+      >
       <a href="/admin/logout" class="inline">
         <button
           type="submit"
           class="bg-black text-white px-3 py-1.5 rounded hover:bg-[#242425] transition"
         >
-          تسجيل الخروج
+          <%= __('admin.header.logout') %>
         </button>
       </a>
     </nav>

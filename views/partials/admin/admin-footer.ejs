@@ -1,5 +1,6 @@
 <footer class="bg-[#242425] text-[#ACA59B] text-center py-4 mt-10">
   <p class="text-sm">
-    © <%= new Date().getFullYear() %> إدارة الموقع — جميع الحقوق محفوظة.
+    <%= __('admin.footer.rights_reserved', { fullYear: new Date().getFullYear()
+    }) %>
   </p>
 </footer>

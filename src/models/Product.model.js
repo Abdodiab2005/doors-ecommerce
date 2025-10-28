@@ -10,25 +10,29 @@ const ProductSchema = new mongoose.Schema(
       en: { type: String, required: true, trim: true },
       he: { type: String, required: true, trim: true },
     },
-
-    price: {
-      type: Number,
-      required: true,
-    },
     category: {
       type: String,
       enum: ["inner", "main"],
       required: true,
     },
 
+    // for admin only
     stock: {
       type: Number,
       default: 0,
     },
+    price: {
+      type: Number,
+      required: true,
+    },
 
+    // images
     images: {
       type: [String],
       required: true,
+    },
+    thumbnail: {
+      type: String,
     },
     colors: [
       {

@@ -53,7 +53,7 @@
       >
         <figure class="aspect-4/3 bg-white">
           <img
-            src="<%= product.images[0] %>"
+            src="<%= product.thumbnail? product.thumbnail : product.images[0] %>"
             alt="<%= product.name[lang] %>"
             class="w-[200px] h-[200px] object-cover"
             loading="lazy"

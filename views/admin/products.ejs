@@ -42,6 +42,7 @@
       <table class="table w-full">
         <thead class="bg-secondary text-neutral font-semibold">
           <tr>
+            <th class="p-4"><%= __('admin.products.thumbnail') %></th>
             <th class="p-4"><%= __('admin.products.name') %></th>
             <th class="p-4"><%= __('admin.products.category') %></th>
             <th class="p-4"><%= __('admin.products.price') %></th>
@@ -56,15 +57,21 @@
               @click="openViewModal(product)"
             >
               <td class="p-4">
+                <img
+                  :src="product.thumbnail? product.thumbnail : product.images[0]"
+                  class="w-12 h-12 object-cover rounded-md border"
+                />
+              </td>
+              <td class="p-4">
                 <a
                   href="#"
                   @click.prevent.stop="openViewModal(product)"
                   class="font-medium hover:underline"
-                  x-text="product.name"
+                  x-text="product.name['<%= lang %>']"
                 >
                 </a>
               </td>
-              <td class="p-4" x-text="product.category"></td>
+              <td class="p-4" x-text="product.category['<%= lang %>']"></td>
               <td class="p-4">
                 $<span x-text="(product.price).toFixed(2)"></span>
               </td>
@@ -133,6 +140,7 @@
     </div>
   </div>
 
+  <!-- Edit modal -->
   <dialog x-ref="addEditModal" class="modal">
     <div class="modal-box w-11/12 max-w-3xl bg-white">
       <form method="dialog">
@@ -142,7 +150,7 @@
       </form>
       <h3
         class="font-bold text-2xl text-neutral mb-5"
-        x-text="editMode ? '<%= __("admin.products.edit_product") %>' : '<%= __("admin.products.add_new_product") %>'"
+        x-text="editMode ? `<%= __('admin.products.edit_product') %>` : `<%= __('admin.products.add_new_product') %>`"
       ></h3>
 
       <form
@@ -151,27 +159,83 @@
         class="space-y-4"
       >
         <div class="form-control">
-          <label class="label">
-            <span class="label-text"><%= __('admin.products.name') %></span>
-          </label>
-          <input
-            type="text"
-            x-model="form.name"
-            class="input input-bordered w-full bg-white border-2 border-neutral"
-            required
-          />
-        </div>
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text"><%= __('admin.products.description') %></span>
-          </label>
-          <textarea
-            x-model="form.description"
-            class="textarea textarea-bordered w-full bg-white border-2 border-neutral"
-            rows="3"
-            required
-          ></textarea>
-        </div>
+<!-- Name Fields -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <label class="label">
+      <span class="label-text"><%= __('admin.products.name') %> (en)</span>
+    </label>
+    <input
+      type="text"
+      x-model="form.name.en"
+      class="input input-bordered w-full bg-white border-2 border-neutral"
+      required
+    />
+  </div>
+  <div>
+    <label class="label">
+      <span class="label-text"><%= __('admin.products.name') %> (he)</span>
+    </label>
+    <input
+      type="text"
+      x-model="form.name.he"
+      class="input input-bordered w-full bg-white border-2 border-neutral"
+      required
+    />
+  </div>
+</div>
+
+<!-- Description Fields -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <label class="label">
+      <span class="label-text"><%= __('admin.products.description') %> (en)</span>
+    </label>
+    <textarea
+      x-model="form.description.en"
+      class="textarea textarea-bordered w-full bg-white border-2 border-neutral"
+      rows="3"
+      required
+    ></textarea>
+  </div>
+  <div>
+    <label class="label">
+      <span class="label-text"><%= __('admin.products.description') %> (he)</span>
+    </label>
+    <textarea
+      x-model="form.description.he"
+      class="textarea textarea-bordered w-full bg-white border-2 border-neutral"
+      rows="3"
+      required
+    ></textarea>
+  </div>
+</div>
+
+       <div class="form-control">
+  <label class="label">
+    <span class="label-text"><%= __('admin.products.thumbnail') %></span>
+  </label>
+  <input
+    type="file"
+    accept="image/*"
+    @change="handleThumbnailFile"
+    class="file-input file-input-bordered file-input-sm w-full bg-white border-2 border-neutral"
+  />
+  <template x-if="thumbnailPreview">
+    <div class="mt-3 relative inline-block">
+      <img :src="thumbnailPreview" class="w-32 h-32 object-cover rounded-md border" />
+      <button
+        type="button"
+        class="absolute top-0 right-0 bg-error text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+        @click="removeThumbnail"
+      >
+        ×
+      </button>
+    </div>
+  </template>
+</div>
+
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="form-control">
             <label class="label">
@@ -199,15 +263,16 @@
             <label class="label">
               <span class="label-text"><%= __('admin.products.category') %></span>
             </label>
-            <select
-              x-model="form.category"
-              class="select select-bordered w-full bg-white border-2 border-neutral"
-              required
-            >
-              <option value="" disabled><%= __('admin.products.select') %></option>
-              <option value="inner"><%= __('admin.products.interior') %></option>
-              <option value="main"><%= __('admin.products.exterior') %></option>
-            </select>
+<select
+  x-model="form.category"
+  class="select select-bordered w-full bg-white border-2 border-neutral"
+  required
+>
+  <option value="" disabled><%= __('admin.products.select') %></option>
+  <option value="inner"><%= __('admin.products.interior') %></option>
+  <option value="main"><%= __('admin.products.exterior') %></option>
+</select>
+
           </div>
         </div>
 
@@ -228,15 +293,19 @@
             class="file-input file-input-bordered file-input-sm w-full bg-white border-2 border-neutral"
           />
           <div class="flex flex-wrap mt-3 gap-2">
-            <template
-              x-for="(file, index) in defaultPreviewImages"
-              :key="index"
-            >
-              <img
-                :src="file"
-                class="w-20 h-20 object-cover rounded-md border"
-              />
-            </template>
+<template x-for="(img, index) in defaultPreviewImages" :key="index">
+  <div class="relative inline-block">
+    <img :src="img" class="w-20 h-20 object-cover rounded-md border" />
+    <button
+      type="button"
+      class="absolute top-0 right-0 bg-error text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+      @click="removeImage(index)"
+    >
+      ×
+    </button>
+  </div>
+</template>
+
           </div>
         </div>
 
@@ -297,6 +366,36 @@
                     @change="handleColorFiles(index, $event)"
                     class="file-input file-input-bordered file-input-xs w-full bg-white border-2 border-neutral"
                   />
+<div class="flex flex-wrap mt-2 gap-2">
+  <!-- الصور القديمة -->
+  <template x-for="(img, i) in color.existing" :key="'old'+i">
+    <div class="relative inline-block">
+      <img :src="img" class="w-16 h-16 object-cover rounded-md border" />
+      <button
+        type="button"
+        class="absolute top-0 right-0 bg-error text-white rounded-full w-4 h-4 flex items-center justify-center text-xs"
+        @click="removeColorImage(index, i)"
+      >
+        ×
+      </button>
+    </div>
+  </template>
+
+  <!-- الصور الجديدة -->
+  <template x-for="(url, i) in color.preview" :key="'new'+i">
+    <div class="relative inline-block">
+      <img :src="url" class="w-16 h-16 object-cover rounded-md border" />
+      <button
+        type="button"
+        class="absolute top-0 right-0 bg-error text-white rounded-full w-4 h-4 flex items-center justify-center text-xs"
+        @click="removeColorImage(index, i)"
+      >
+        ×
+      </button>
+    </div>
+  </template>
+</div>
+
                   <div class="flex flex-wrap mt-2 gap-2">
                     <template x-for="(url, i) in color.preview" :key="i">
                       <img
@@ -318,13 +417,14 @@
           <button
             type="submit"
             class="btn btn-primary"
-            x-text="editMode ? '<%= __("admin.products.update_product") %>' : '<%= __("admin.products.add_product") %>'"
+            x-text="editMode ? `<%= __("admin.products.update_product") %>` : `<%= __("admin.products.add_product") %>`"
           ></button>
         </div>
       </form>
     </div>
   </dialog>
 
+  <!-- Delete modal -->
   <dialog x-ref="deleteModal" class="modal">
     <div class="modal-box bg-white">
       <h3 class="font-bold text-lg text-neutral"><%= __('admin.products.are_you_sure') %></h3>
@@ -342,6 +442,7 @@
     </div>
   </dialog>
 
+  <!-- View modal -->
   <dialog x-ref="viewModal" class="modal">
     <div class="modal-box w-11/12 max-w-4xl bg-white">
       <form method="dialog">
@@ -354,7 +455,7 @@
         <div class="space-y-4">
           <h3
             class="font-bold text-3xl text-neutral"
-            x-text="selectedProduct.name"
+            x-text="selectedProduct.name['<%= lang %>']"
           ></h3>
           <a
             :href="`${baseUrl}/products/${selectedProduct._id}`"
@@ -493,14 +594,16 @@
       baseUrl: "<%= req.protocol + '://' + req.get('host') %>",
       defaultPreviewImages: [],
       form: {
-        name: "",
-        description: "",
-        price: "",
-        stock: "",
-        category: "",
-        images: [],
-        colors: [],
-      },
+  name: { en: "", he: "" },
+  description: { en: "", he: "" },
+  price: "",
+  stock: "",
+  category: "",
+  thumbnail: "",
+  images: [],
+  colors: [],
+},
+
 
       // Fetch products (with pagination)
       async fetchProducts(page = 1) {
@@ -534,14 +637,16 @@
       // Reset form
       resetForm() {
         this.form = {
-          name: "",
-          description: "",
-          price: "",
-          stock: "",
-          category: "",
-          images: [],
-          colors: [],
-        };
+  name: { en: "", he: "" },
+  description: { en: "", he: "" },
+  price: "",
+  stock: "",
+  category: "",
+  thumbnail: "",
+  images: [],
+  colors: [],
+};
+
         this.defaultPreviewImages = [];
         this.editMode = false;
         this.productId = null;
@@ -553,25 +658,38 @@
         this.$refs.addEditModal.showModal(); // Use daisyUI method
       },
 
-      openEditModal(product) {
-        this.resetForm();
-        this.editMode = true;
-        this.productId = product._id;
+   openEditModal(product) {
+  this.resetForm();
+  this.editMode = true;
+  this.productId = product._id;
 
-        // Pre-fill form, reset image arrays (must re-upload on edit)
-        this.form = {
-          ...product,
-          images: [], // Clear file input for default images
-          // Pre-fill color meta, but clear their image file inputs
-          colors:
-            product.colors.map((c) => ({
-              ...c,
-              images: [],
-              preview: [], // Clear previews
-            })) || [],
-        };
-        this.$refs.addEditModal.showModal(); // Use daisyUI method
-      },
+  // الاسم والوصف
+  this.form.name = { ...product.name };
+  this.form.description = { ...product.description };
+  this.form.price = product.price || "";
+  this.form.stock = product.stock || "";
+  this.form.category = product.category || "";
+
+  // ✅ Thumbnail preview
+  this.form.thumbnail = null;
+  this.thumbnailPreview = product.thumbnail || "";
+
+  // ✅ الصور القديمة (main images)
+  this.existingImages = [...(product.images || [])];
+  this.defaultPreviewImages = [...this.existingImages];
+
+  // ✅ الألوان
+  this.form.colors =
+    product.colors?.map((c) => ({
+      name: c.name,
+      hex: c.hex,
+      images: [],
+      preview: [],
+      existing: c.images || [],
+    })) || [];
+
+  this.$refs.addEditModal.showModal();
+},
 
       // NEW: Open View Modal
       openViewModal(product) {
@@ -599,10 +717,12 @@
       },
 
       handleDefaultFiles(e) {
-        const files = Array.from(e.target.files);
-        this.form.images = files;
-        this.defaultPreviewImages = files.map((f) => URL.createObjectURL(f));
-      },
+  const files = Array.from(e.target.files);
+  this.form.images.push(...files);
+  const newPreviews = files.map((f) => URL.createObjectURL(f));
+  this.defaultPreviewImages.push(...newPreviews);
+},
+
 
       handleColorFiles(index, e) {
         const files = Array.from(e.target.files);
@@ -612,35 +732,111 @@
         );
       },
 
+      handleThumbnailFile(e) {
+        const file = e.target.files[0];
+        this.form.thumbnail = file;
+        this.thumbnailPreview = URL.createObjectURL(file);
+      },
+
+      removeImage(index) {
+  // احذف الصورة من الـ preview
+  this.defaultPreviewImages.splice(index, 1);
+
+  // لو الصورة دي من القديمة احذفها من existingImages
+  if (this.existingImages[index]) {
+    this.existingImages.splice(index, 1);
+  } else {
+    // لو دي كانت جديدة (file object)
+    this.form.images.splice(index - this.existingImages.length, 1);
+  }
+},
+
+handleThumbnailFile(e) {
+  const file = e.target.files[0];
+  this.form.thumbnail = file;
+  this.thumbnailPreview = URL.createObjectURL(file);
+},
+removeThumbnail() {
+  this.thumbnailPreview = "";
+  this.form.thumbnail = null;
+},
+
+
+removeColorImage(colorIndex, imgIndex) {
+  const color = this.form.colors[colorIndex];
+
+  if (color.existing && color.existing[imgIndex]) {
+    color.existing.splice(imgIndex, 1);
+  } else if (color.preview && color.preview[imgIndex]) {
+    color.preview.splice(imgIndex, 1);
+    color.images.splice(imgIndex, 1);
+  }
+},
+
       // --- API Calls ---
       async submitForm() {
         const formData = new FormData();
 
         // Append simple fields
-        formData.append("name", this.form.name);
-        formData.append("description", this.form.description);
+formData.append("name", JSON.stringify(this.form.name));
+formData.append("description", JSON.stringify(this.form.description));
+
         formData.append("price", this.form.price);
         formData.append("stock", this.form.stock);
         formData.append("category", this.form.category);
+// 🖼️ Thumbnail logic
+if (this.thumbnailPreview && typeof this.thumbnailPreview === "string" && !this.thumbnailPreview.startsWith("blob:")) {
+  formData.append("thumbnailOld", this.thumbnailPreview);
+}
+if (this.form.thumbnail) {
+  formData.append("thumbnail", this.form.thumbnail);
+}
 
-        // Append default images
-        this.form.images.forEach((img) => {
-          formData.append("images", img);
-        });
 
-        // Append color metadata as a JSON string
-        const colorMeta = this.form.colors.map((c) => ({
-          name: c.name,
-          hex: c.hex,
-        }));
-        formData.append("colors", JSON.stringify(colorMeta));
+        // 1️⃣ الصور القديمة اللي لسه موجودة
+// 1️⃣ الصور القديمة فقط (نستبعد blob URLs)
+const oldImages = this.defaultPreviewImages.filter(
+  (img) => typeof img === "string" && !img.startsWith("blob:")
+);
 
-        // Append color images with unique fieldnames
-        this.form.colors.forEach((color, index) => {
-          color.images.forEach((imgFile) => {
-            formData.append(`colorImages_${index}`, imgFile);
-          });
-        });
+// 2️⃣ ابعتهم كـ JSON في formData
+formData.append("imagesOld", JSON.stringify(oldImages));
+
+// 3️⃣ الصور الجديدة (File objects)
+this.form.images.forEach((img) => {
+  formData.append("images", img);
+});
+
+
+// 🎨 Append color data (names, hex, old + new images)
+const colorMeta = this.form.colors.map((color, index) => {
+  // 1️⃣ أرسل بيانات اللون الأساسية
+  const data = {
+    name: color.name,
+    hex: color.hex,
+  };
+
+  // 2️⃣ أرسل الصور القديمة اللي فضلها المستخدم
+  const keptOld = (color.existing || []).filter(
+    (img) => typeof img === "string" && !img.startsWith("blob:")
+  );
+  formData.append(`colorsOld_${index}`, JSON.stringify(keptOld));
+
+  // 3️⃣ أرسل الصور الجديدة
+  (color.images || []).forEach((imgFile) => {
+    formData.append(`colorImages_${index}`, imgFile);
+  });
+
+  return data;
+});
+
+// 4️⃣ في الآخر، أرسل الـ JSON نفسه (الاسم والـ hex)
+formData.append("colors", JSON.stringify(colorMeta));
+
+for (const [key, value] of formData.entries()) {
+  console.log("📦", key, value);
+}
+
 
         const url = this.editMode
           ? `/admin/api/products/${this.productId}`
@@ -648,6 +844,7 @@
         const method = this.editMode ? "PUT" : "POST";
 
         try {
+
           const res = await fetch(url, { method, body: formData });
           if (!res.ok) throw new Error("Form submission failed");
 

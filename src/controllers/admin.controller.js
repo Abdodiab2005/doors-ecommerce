@@ -80,6 +80,19 @@ exports.createProduct = async (req, res, next) => {
     // استخرج الحقول الأساسية (غالباً هيكونوا strings من الفورم)
     let { name, description, price, category, stock, colors } = req.body;
 
+    // فك JSON الخاص بالاسم والوصف لو مبعوت كسلسلة
+    try {
+      if (typeof name === "string") name = JSON.parse(name);
+    } catch {
+      console.warn("Invalid name JSON, keeping as string");
+    }
+    try {
+      if (typeof description === "string")
+        description = JSON.parse(description);
+    } catch {
+      console.warn("Invalid description JSON, keeping as string");
+    }
+
     // تأكد من أنواع price / stock
     if (price !== undefined) price = Number(price);
     if (stock !== undefined) stock = Number(stock);
@@ -98,6 +111,24 @@ exports.createProduct = async (req, res, next) => {
       images: [],
       colors: [],
     };
+
+    // === thumbnail ===
+    let thumbnailFile = null;
+    if (req.files && Array.isArray(req.files)) {
+      thumbnailFile = req.files.find((f) => f.fieldname === "thumbnail");
+    } else if (req.files && typeof req.files === "object") {
+      for (const key in req.files) {
+        const val = req.files[key];
+        if (Array.isArray(val)) {
+          const found = val.find((f) => f.fieldname === "thumbnail");
+          if (found) thumbnailFile = found;
+        }
+      }
+    }
+
+    if (thumbnailFile) {
+      productData.thumbnail = `/images/${subfolder}/${thumbnailFile.filename}`;
+    }
 
     // === معالجة colors ===
     // قد يجي colors كـ string (JSON) أو كـ array فعلي
@@ -198,86 +229,136 @@ exports.createProduct = async (req, res, next) => {
 
 exports.updateProduct = async (req, res, next) => {
   try {
-    const { name, description, price, category, stock, colors } = req.body;
+    let { name, description, price, category, stock, colors } = req.body;
+
+    console.log("🧾 req.body:", req.body);
+    console.log("📁 req.files keys:", Object.keys(req.files || {}));
+
+    // 🔎 الحصول على المنتج الحالي
     const product = await Product.findById(req.params.id);
     if (!product) return next(new AppError("Product not found", 404));
 
+    // 🧩 فك JSON للاسم والوصف لو جايين كـ string
+    try {
+      if (typeof name === "string") name = JSON.parse(name);
+    } catch {
+      name = product.name;
+    }
+
+    try {
+      if (typeof description === "string")
+        description = JSON.parse(description);
+    } catch {
+      description = product.description;
+    }
+
+    // 📂 تحديد مجلد الصور
     let subfolder = "other-products";
     if (category === "inner") subfolder = "inner-doors";
     else if (category === "main") subfolder = "main-doors";
 
-    const updateData = { name, description, price, category, stock };
+    // 🧱 بيانات أساسية للتحديث
+    const updateData = {
+      name: name || product.name,
+      description: description || product.description,
+      price: price !== undefined ? Number(price) : product.price,
+      category: category || product.category,
+      stock: stock !== undefined ? Number(stock) : product.stock,
+    };
+
+    // 🖼️ Thumbnail logic
+    let thumbnailFile = null;
+    if (req.files && Array.isArray(req.files)) {
+      thumbnailFile = req.files.find((f) => f.fieldname === "thumbnail");
+    } else if (req.files && typeof req.files === "object") {
+      for (const key in req.files) {
+        const val = req.files[key];
+        if (Array.isArray(val)) {
+          const found = val.find((f) => f.fieldname === "thumbnail");
+          if (found) thumbnailFile = found;
+        }
+      }
+    }
+
+    if (thumbnailFile) {
+      if (product.thumbnail && product.thumbnail !== req.body.thumbnailOld) {
+        _maybeDeleteFile(product.thumbnail);
+      }
+      updateData.thumbnail = `/images/${subfolder}/${thumbnailFile.filename}`;
+    } else if (req.body.thumbnailOld) {
+      updateData.thumbnail = req.body.thumbnailOld;
+    } else {
+      updateData.thumbnail = "";
+    }
+
+    // 🖼️ الصور الرئيسية (main images)
+    let imagesFinal = [];
+    if (req.body.imagesOld) {
+      try {
+        imagesFinal = JSON.parse(req.body.imagesOld);
+      } catch {
+        imagesFinal = [];
+      }
+    }
 
     const newImages = [];
-    let parsedColors = [];
+    const allFiles = Array.isArray(req.files)
+      ? req.files
+      : Object.values(req.files || {}).flat();
 
-    // ✅ نحاول نفك JSON الـ colors
+    for (const file of allFiles) {
+      if (file.fieldname === "images") {
+        newImages.push(`/images/${subfolder}/${file.filename}`);
+      }
+    }
+
+    updateData.images = [...imagesFinal, ...newImages];
+
+    // 🎨 معالجة الألوان
+    let parsedColors = [];
     if (colors) {
       try {
         parsedColors = JSON.parse(colors);
       } catch {
-        parsedColors = product.colors;
+        parsedColors = product.colors || [];
       }
     } else {
-      parsedColors = product.colors;
+      parsedColors = product.colors || [];
     }
 
-    // ✅ تجهيز الألوان قبل الدمج
-    parsedColors = parsedColors.map((color, index) => ({
-      name: color.name || product.colors[index]?.name || `Color ${index + 1}`,
-      hex: color.hex || product.colors[index]?.hex || "#000000",
-      images: Array.isArray(color.images)
-        ? color.images.length
-          ? color.images
-          : product.colors[index]?.images || []
-        : product.colors[index]?.images || [],
-    }));
-
-    // ✅ لو فيه صور جديدة
-    const hasNewFiles = req.files && req.files.length > 0;
-
-    if (hasNewFiles) {
-      // 🧹 أولاً نحذف الصور القديمة كلها (main + colors)
-      if (Array.isArray(product.images)) {
-        product.images.forEach((imgPath) => _maybeDeleteFile(imgPath));
-      }
-      if (Array.isArray(product.colors)) {
-        product.colors.forEach((color) => {
-          if (Array.isArray(color.images)) {
-            color.images.forEach((imgPath) => _maybeDeleteFile(imgPath));
-          }
-        });
-      }
-
-      // ✅ ثم نضيف الصور الجديدة
-      for (const file of req.files) {
-        const filePath = `/images/${subfolder}/${file.filename}`;
-
-        if (file.fieldname === "images") {
-          newImages.push(filePath);
-        } else if (file.fieldname.startsWith("colorImages_")) {
-          const index = parseInt(file.fieldname.split("_")[1]);
-          if (!parsedColors[index]) {
-            parsedColors[index] = {
-              name: `Color ${index + 1}`,
-              hex: "#000000",
-              images: [],
-            };
-          }
-          parsedColors[index].images.push(filePath);
+    const mergedColors = parsedColors.map((c, i) => {
+      // الصور القديمة اللي فضلها المستخدم
+      let oldImages = [];
+      if (req.body[`colorsOld_${i}`]) {
+        try {
+          oldImages = JSON.parse(req.body[`colorsOld_${i}`]);
+        } catch {
+          oldImages = [];
         }
       }
 
-      // ✅ الصور الرئيسية الجديدة
-      updateData.images = newImages;
-    } else {
-      // مفيش صور جديدة → استخدم القديمة
-      updateData.images = product.images;
-    }
+      // الصور الجديدة
+      const newColorImages = [];
+      const colorFiles = Object.keys(req.files || {})
+        .filter((key) => key === `colorImages_${i}`)
+        .flatMap((key) => req.files[key]);
 
-    // ✅ الألوان بعد الدمج النهائي
-    updateData.colors = parsedColors;
+      if (colorFiles && colorFiles.length) {
+        colorFiles.forEach((file) => {
+          newColorImages.push(`/images/${subfolder}/${file.filename}`);
+        });
+      }
 
+      return {
+        name: c.name || product.colors[i]?.name || `Color ${i + 1}`,
+        hex: c.hex || product.colors[i]?.hex || "#000000",
+        images: [...oldImages, ...newColorImages],
+      };
+    });
+
+    updateData.colors = mergedColors;
+
+    // 💾 تنفيذ التحديث
     const updated = await Product.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
     });
