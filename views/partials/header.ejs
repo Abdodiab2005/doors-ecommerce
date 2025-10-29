@@ -116,10 +116,6 @@
                 <span x-text="suggestion.name['<%= lang %>']"></span>
               </a>
             </template>
-            <script>
-              console.log("<%=  lang %>");
-            </script>
-
             <div
               x-show="!isLoading && searchQuery.length > 0 && suggestions.length === 0"
               class="p-4 text-center text-gray-500"

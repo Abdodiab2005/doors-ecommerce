@@ -12,11 +12,8 @@ exports.getSitemap = async (req, res, next) => {
 <url><loc>${baseUrl}/category/main</loc><priority>0.8</priority></url>
 `;
 
-    console.log(`urls: `, urls);
-
     products.forEach((p) => {
       urls += `<url><loc>${baseUrl}/product/${p._id}</loc><priority>0.6</priority></url>\n`;
-      console.log(p.name);
     });
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -24,11 +21,8 @@ exports.getSitemap = async (req, res, next) => {
 ${urls}
 </urlset>`;
 
-    console.log(xml);
-
     res.set("Content-Type", "application/xml");
     res.send(xml);
-    console.log("sitemap hit ✅");
   } catch (err) {
     next(err);
   }

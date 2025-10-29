@@ -73,7 +73,6 @@
           try {
             // 5. اطلب من المتصفح فتح قائمة المشاركة
             await navigator.share(shareData);
-            console.log("Product shared successfully!");
           } catch (err) {
             console.error("Share failed:", err.message);
           }

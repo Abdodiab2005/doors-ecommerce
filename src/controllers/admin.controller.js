@@ -231,9 +231,6 @@ exports.updateProduct = async (req, res, next) => {
   try {
     let { name, description, price, category, stock, colors } = req.body;
 
-    console.log("🧾 req.body:", req.body);
-    console.log("📁 req.files keys:", Object.keys(req.files || {}));
-
     // 🔎 الحصول على المنتج الحالي
     const product = await Product.findById(req.params.id);
     if (!product) return next(new AppError("Product not found", 404));
@@ -280,19 +277,26 @@ exports.updateProduct = async (req, res, next) => {
       }
     }
 
+    // 🗑️ لوجيك حذف/تحديث الـ Thumbnail
     if (thumbnailFile) {
-      if (product.thumbnail && product.thumbnail !== req.body.thumbnailOld) {
+      // إذا فيه ملف جديد، احذف القديم (لو موجود)
+      if (product.thumbnail) {
         _maybeDeleteFile(product.thumbnail);
       }
       updateData.thumbnail = `/images/${subfolder}/${thumbnailFile.filename}`;
     } else if (req.body.thumbnailOld) {
+      // لو مفيش ملف جديد، بس المستخدم أبقى على القديم
       updateData.thumbnail = req.body.thumbnailOld;
     } else {
+      // لو مفيش ملف جديد، والمستخدم *حذف* القديم
+      if (product.thumbnail) {
+        _maybeDeleteFile(product.thumbnail);
+      }
       updateData.thumbnail = "";
     }
 
     // 🖼️ الصور الرئيسية (main images)
-    let imagesFinal = [];
+    let imagesFinal = []; // الصور "القديمة" التي أبقى عليها المستخدم
     if (req.body.imagesOld) {
       try {
         imagesFinal = JSON.parse(req.body.imagesOld);
@@ -301,6 +305,18 @@ exports.updateProduct = async (req, res, next) => {
       }
     }
 
+    // 🗑️ لوجيك حذف الصور الرئيسية
+    // نقارن الصور الأصلية بالصور التي أبقى عليها المستخدم
+    const keptImagesSet = new Set(imagesFinal);
+    const originalImages = product.images || [];
+    for (const imgPath of originalImages) {
+      if (!keptImagesSet.has(imgPath)) {
+        // إذا الصورة الأصلية مش موجودة في "المُبقاة"، احذفها
+        _maybeDeleteFile(imgPath);
+      }
+    }
+
+    // الصور الجديدة المرفوعة
     const newImages = [];
     const allFiles = Array.isArray(req.files)
       ? req.files
@@ -312,10 +328,11 @@ exports.updateProduct = async (req, res, next) => {
       }
     }
 
+    // القائمة النهائية = المُبقاة + الجديدة
     updateData.images = [...imagesFinal, ...newImages];
 
     // 🎨 معالجة الألوان
-    let parsedColors = [];
+    let parsedColors = []; // الألوان من الفورم (JSON)
     if (colors) {
       try {
         parsedColors = JSON.parse(colors);
@@ -327,7 +344,7 @@ exports.updateProduct = async (req, res, next) => {
     }
 
     const mergedColors = parsedColors.map((c, i) => {
-      // الصور القديمة اللي فضلها المستخدم
+      // الصور القديمة "المُبقاة" لهذا اللون
       let oldImages = [];
       if (req.body[`colorsOld_${i}`]) {
         try {
@@ -337,7 +354,23 @@ exports.updateProduct = async (req, res, next) => {
         }
       }
 
-      // الصور الجديدة
+      // 🗑️ لوجيك حذف صور الألوان
+      // هام: هذا يعتمد على أن ترتيب الألوان لم يتغير في الفورم
+      const originalColor =
+        product.colors && product.colors[i] ? product.colors[i] : null;
+      const originalColorImages =
+        originalColor && Array.isArray(originalColor.images)
+          ? originalColor.images
+          : [];
+      const keptColorImagesSet = new Set(oldImages);
+
+      for (const imgPath of originalColorImages) {
+        if (!keptColorImagesSet.has(imgPath)) {
+          _maybeDeleteFile(imgPath);
+        }
+      }
+
+      // الصور الجديدة لهذا اللون
       const newColorImages = [];
       const colorFiles = Object.keys(req.files || {})
         .filter((key) => key === `colorImages_${i}`)
@@ -352,7 +385,7 @@ exports.updateProduct = async (req, res, next) => {
       return {
         name: c.name || product.colors[i]?.name || `Color ${i + 1}`,
         hex: c.hex || product.colors[i]?.hex || "#000000",
-        images: [...oldImages, ...newColorImages],
+        images: [...oldImages, ...newColorImages], // القائمة النهائية = المُبقاة + الجديدة
       };
     });
 

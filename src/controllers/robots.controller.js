@@ -9,5 +9,4 @@ exports.getRobots = (req, res) => {
   ].join("\n");
 
   res.type("text/plain").send(content);
-  console.log("robots hit ✅");
 };

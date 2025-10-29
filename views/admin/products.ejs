@@ -460,13 +460,13 @@
           <a
             :href="`${baseUrl}/products/${selectedProduct._id}`"
             target="_blank"
-            class="border-2 border-black py-2 px-4 rounded-2xl flex justify-center w-max items-center gap-2"
+            class="border-2 border-black py-2 px-4 rounded-2xl flex justify-center w-max items-center gap-2 hover:bg-black hover:text-white transition-colors duration-200"
           >
             <i class="fa-solid fa-eye"></i>
 
             <%= __('admin.products.view_product') %>
           </a>
-          <p class="text-gray-600" x-text="selectedProduct.description"></p>
+          <p class="text-gray-600" x-text="selectedProduct.description['<%= lang %>']"></p>
 
           <div class="flex flex-wrap gap-4">
             <div class="badge badge-lg badge-secondary text-white">
@@ -832,12 +832,6 @@ const colorMeta = this.form.colors.map((color, index) => {
 
 // 4️⃣ في الآخر، أرسل الـ JSON نفسه (الاسم والـ hex)
 formData.append("colors", JSON.stringify(colorMeta));
-
-for (const [key, value] of formData.entries()) {
-  console.log("📦", key, value);
-}
-
-
         const url = this.editMode
           ? `/admin/api/products/${this.productId}`
           : `/admin/api/products`;
