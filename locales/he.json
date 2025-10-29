@@ -41,7 +41,8 @@
     "available_colors": "צבעים זמינים",
     "call_us": "התקשר אלינו",
     "whatsapp": "וואטסאפ",
-    "email": "אימייל"
+    "email": "אימייל",
+    "reset_color": "איפוס צבע"
   },
   "error": {
     "something_went_wrong": "משהו השתבש",

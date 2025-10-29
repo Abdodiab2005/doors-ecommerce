@@ -19,7 +19,7 @@ const { requireAuth } = require('./middlewares/auth.middleware');
 i18n.configure({
   locales: ['en', 'he'],
   directory: path.join(__dirname, './../locales'),
-  defaultLocale: 'en',
+  defaultLocale: 'he',
   cookie: 'lang', // optional
   autoReload: true,
   syncFiles: false,
@@ -90,7 +90,6 @@ app.set('view engine', 'ejs');
 app.set('layout', 'layout/main');
 app.use(expressEjsLayouts);
 app.use(setLocals);
-const langs = i18n.getLocales();
 
 const homeRoutes = require('./routes/home.routes');
 const productRoutes = require('./routes/product.routes');
@@ -113,11 +112,6 @@ app.use(
   requireAuth,
   express.static(path.join(__dirname, 'protected_assets'))
 );
-
-langs.forEach((lang) => {
-  app.use(`/${lang}`, homeRoutes);
-  app.use(`/${lang}/products`, productRoutes);
-});
 
 // --- 4. Error Handling ---
 // 404 Handler

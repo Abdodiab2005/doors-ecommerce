@@ -1,12 +1,14 @@
 // src/controllers/robots.controller.js
 exports.getRobots = (req, res) => {
-  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  const baseUrl = `${req.protocol}://${req.get('host')}`;
   const content = [
-    "User-agent: *",
-    "Allow: /",
-    "",
+    'User-agent: *',
+    'Allow: /',
+    'Disallow: /admin',
+    'Disallow: /admin/',
+    '',
     `Sitemap: ${baseUrl}/sitemap.xml`,
-  ].join("\n");
+  ].join('\n');
 
-  res.type("text/plain").send(content);
+  res.type('text/plain').send(content);
 };

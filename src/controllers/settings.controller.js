@@ -1,9 +1,14 @@
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs');
+
 const Setting = require('../models/Setting.model');
 const Admin = require('../models/Admin.model');
 const logger = require('../utils/logger');
 const AppError = require('../utils/AppError');
 const { success } = require('../utils/response');
 const _maybeDeleteFile = require('../utils/mayBeDelete');
+const deepMerge = require('../utils/deepMerge');
 
 const SETTINGS_ID_QUERY = {}; // we maintain single doc; can just use findOne
 
@@ -70,7 +75,8 @@ async function updateSettings(req, res, next) {
 
     // handle file uploads
     payload.assets = { ...current.assets };
-    const handleFile = (key, folder = 'images') => {
+
+    const handleFile = (key, folder = 'images/logo') => {
       if (files[key]?.[0]) {
         const newPath = `/${folder}/${files[key][0].filename}`;
         _maybeDeleteFile(current.assets?.[key]);
@@ -80,24 +86,34 @@ async function updateSettings(req, res, next) {
 
     handleFile('logo');
     handleFile('favicon');
-    handleFile('innerDoorsImage');
-    handleFile('outerDoorsImage');
-    handleFile('slider');
+    handleFile('innerDoorsImage', 'images');
+    handleFile('outerDoorsImage', 'images');
+    handleFile('slider', 'images');
 
-    // deep merge to preserve old fields
-    function deepMerge(target, source) {
-      for (const key in source) {
-        if (
-          source[key] &&
-          typeof source[key] === 'object' &&
-          !Array.isArray(source[key])
-        ) {
-          target[key] = deepMerge(target[key] || {}, source[key]);
-        } else if (source[key] !== undefined && source[key] !== '') {
-          target[key] = source[key];
-        }
+    // === auto-generate favicon + pwa icons ===
+    if (files.logo?.[0]) {
+      const logoFile = files.logo[0];
+      const publicDir = path.join(process.cwd(), 'public/images/logo');
+      if (!fs.existsSync(publicDir))
+        fs.mkdirSync(publicDir, { recursive: true });
+
+      const baseName = path.parse(logoFile.filename).name;
+      const outputDir = publicDir;
+
+      const sizes = [192, 512, 32, 16];
+      for (const size of sizes) {
+        await sharp(logoFile.path)
+          .resize(size, size)
+          .toFile(`${outputDir}/${baseName}-${size}x${size}.png`);
       }
-      return target;
+
+      // generate favicon.ico
+      await sharp(logoFile.path)
+        .resize(64, 64)
+        .toFile(`${outputDir}/favicon.ico`);
+
+      // update DB paths
+      payload.assets.favicon = `/images/logo/${baseName}-32x32.png`;
     }
 
     const updatedData = deepMerge(current, payload);

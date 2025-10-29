@@ -107,9 +107,9 @@
               <i class="fas fa-spinner fa-spin h-5 w-5 text-primary"></i>
             </div>
 
-            <template x-for="suggestion in suggestions" :key="suggestion._id">
+            <template x-for="suggestion in suggestions" :key="suggestion.slug">
               <a
-                :href="'/products/' + suggestion._id"
+                :href="'/products/' + suggestion.slug['<%= lang %>']"
                 @click.prevent="navigateToSuggestion(suggestion)"
                 class="block px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
               >
@@ -200,7 +200,7 @@
               }
 
               // 5. اذهب إلى صفحة المنتج
-              window.location.href = "/products/" + suggestion._id;
+              window.location.href = "/products/" + suggestion.slug['<%= lang %>'];
             },
           };
         }

@@ -41,7 +41,8 @@
     "available_colors": "Available colors",
     "call_us": "Call Us",
     "whatsapp": "WhatsApp",
-    "email": "Email"
+    "email": "Email",
+    "reset_color": "Reset Color"
   },
   "error": {
     "something_went_wrong": "Something went wrong",

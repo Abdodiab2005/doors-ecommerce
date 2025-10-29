@@ -1,44 +1,46 @@
-const Product = require("../models/Product.model");
-const logger = require("../utils/logger");
-const AppError = require("../utils/AppError");
-const { success } = require("../utils/response");
+const Product = require('../models/Product.model');
+const logger = require('../utils/logger');
+const AppError = require('../utils/AppError');
+const { success } = require('../utils/response');
 
 // ترجمة أسماء الكاتيجوريز
 const categoryNames = {
-  inner: { en: "inner", he: "פנימיות" },
-  main: { en: "main", he: "חיצוניות" },
+  inner: { en: 'inner', he: 'פנימיות' },
+  main: { en: 'main', he: 'חיצוניות' },
 };
 
 function escapeRegex(string) {
   // $& تعني "كل النص الذي تطابق"
   // هذا الكود يجد أي حرف خاص بالـ regex ويضع قبله \
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-exports.getProductById = async (req, res, next) => {
-  const lang = req.lang || "en";
+exports.getProductBySlug = async (req, res, next) => {
+  const lang = req.lang || 'en';
 
   try {
-    const { id } = req.params;
-    const product = await Product.findById(id);
-    if (!product) return next(new AppError("Product not found", 404));
+    const { slug } = req.params;
+    const product = await Product.findOne({
+      [`slug.${lang}`]: slug,
+    }).select('-_id -updatedAt -createdAt -price -stock -thumbnail');
+    if (!product) return next(new AppError('Product not found', 404));
 
-    res.render("product", {
+    res.render('product', {
       title: product.name[lang],
-      layout: "layout/main",
+      layout: 'layout/main',
       description: product.description[lang],
       product,
       lang,
       category: categoryNames[product.category]?.[lang],
     });
   } catch (error) {
-    logger.error("Error fetching product:", error);
-    next(new AppError("Error fetching product", 500));
+    logger.error('Error fetching product:', error);
+    next(new AppError('Error fetching product', 500));
   }
 };
 
 exports.getAllProducts = async (req, res, next) => {
-  const lang = req.lang || "en";
+  const lang = req.lang || 'en';
 
   try {
     const { page, limit, skip } = req.pagination;
@@ -49,80 +51,84 @@ exports.getAllProducts = async (req, res, next) => {
 
     if (q) {
       filter.$or = [
-        { [`name.${lang}`]: { $regex: q, $options: "i" } },
-        { [`description.${lang}`]: { $regex: q, $options: "i" } },
+        { [`name.${lang}`]: { $regex: q, $options: 'i' } },
+        { [`description.${lang}`]: { $regex: q, $options: 'i' } },
       ];
     }
 
     const [products, total] = await Promise.all([
-      Product.find(filter).skip(skip).limit(limit).lean(),
+      Product.find(filter)
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .select('-_id -updatedAt -createdAt -price -stock -colors'),
       Product.countDocuments(filter),
     ]);
 
     const totalPages = Math.ceil(total / limit);
 
-    let title = lang === "he" ? "כל המוצרים" : "All Products";
-    let description = lang === "he" ? "כל המוצרים בחנות" : "All Products";
+    let title = lang === 'he' ? 'כל המוצרים' : 'All Products';
+    let description = lang === 'he' ? 'כל המוצרים בחנות' : 'All Products';
 
     let catName;
     if (category) {
       catName = categoryNames[category]?.[lang] || category;
-      title = `${catName} ${lang === "he" ? "דלתות" : "Doors"}`;
+      title = `${catName} ${lang === 'he' ? 'דלתות' : 'Doors'}`;
       description =
-        lang === "he"
+        lang === 'he'
           ? `עיין בדלתות ${catName}`
           : `Browse our ${catName} doors`;
     }
 
     if (q) {
       title =
-        lang === "he"
+        lang === 'he'
           ? `תוצאות חיפוש עבור "${q}"`
           : `Search results for "${q}"`;
       description =
-        lang === "he"
+        lang === 'he'
           ? `מציג מוצרים תואמים ל-"${q}"`
           : `Showing products matching "${q}"`;
     }
 
     if (category && q) {
       title =
-        lang === "he"
+        lang === 'he'
           ? `חיפוש "${q}" בקטגוריית ${catName}`
           : `Search for "${q}" in ${catName}`;
     }
 
     const categories = [
       {
-        en: { name: "All", url: "/products" },
-        he: { name: "הכל", url: "/products" },
+        en: { name: 'All', url: '/products' },
+        he: { name: 'הכל', url: '/products' },
       },
       {
-        en: { name: "inner", url: "/products?category=inner" },
-        he: { name: "פנימיות", url: "/products?category=inner" },
+        en: { name: 'inner', url: '/products?category=inner' },
+        he: { name: 'פנימיות', url: '/products?category=inner' },
       },
       {
-        en: { name: "main", url: "/products?category=main" },
-        he: { name: "חיצוניות", url: "/products?category=main" },
+        en: { name: 'main', url: '/products?category=main' },
+        he: { name: 'חיצוניות', url: '/products?category=main' },
       },
     ];
 
-    res.render("products", {
-      layout: "layout/main",
+    res.render('products', {
+      layout: 'layout/main',
       title,
       description,
       products,
       currentPage: page,
       totalPages,
-      currentCategory: catName || { en: "All", he: "הכל" }[lang],
+      currentCategory: catName || { en: 'All', he: 'הכל' }[lang],
       enCatName: category ? categoryNames[category]?.en : null,
       categories,
       searchQuery: q || null,
       lang,
     });
   } catch (error) {
-    logger.error("Error fetching products:", error);
-    next(new AppError("Error fetching products", 500));
+    logger.error('Error fetching products:', error);
+    next(new AppError('Error fetching products', 500));
   }
 };
 
@@ -130,36 +136,36 @@ exports.getSuggestions = async (req, res, next) => {
   try {
     const { q } = req.query;
 
-    if (typeof q !== "string") {
-      return success(res, "Invalid search query", []);
+    if (typeof q !== 'string') {
+      return success(res, 'Invalid search query', []);
     }
 
     // 2. التحقق من الطول (اختياري ولكنه جيد)
     if (q.length > 100) {
       // لا تسمح بكلمات بحث طويلة جداً
-      return success(res, "Search query is too long", []);
+      return success(res, 'Search query is too long', []);
     }
 
     const queryTerm = q.trim();
 
     if (!queryTerm) {
-      return success(res, "No suggestions found", []);
+      return success(res, 'No suggestions found', []);
     }
 
     const sanitizedQuery = escapeRegex(queryTerm);
 
     const products = await Product.find({
       $or: [
-        { "name.en": { $regex: sanitizedQuery, $options: "i" } },
-        { "name.he": { $regex: sanitizedQuery, $options: "i" } },
+        { 'name.en': { $regex: sanitizedQuery, $options: 'i' } },
+        { 'name.he': { $regex: sanitizedQuery, $options: 'i' } },
       ],
     })
-      .select("name _id")
+      .select('name slug')
       .limit(10);
 
-    return success(res, "Suggestions fetched successfully", products);
+    return success(res, 'Suggestions fetched successfully', products);
   } catch (error) {
-    logger.error("Error fetching suggestions:", error);
-    return next(new AppError("Error fetching suggestions", 500));
+    logger.error('Error fetching suggestions:', error);
+    return next(new AppError('Error fetching suggestions', 500));
   }
 };

@@ -41,7 +41,7 @@
     >
       <% if (products && products.length > 0) { %> <% products.forEach(product => { %>
       <div
-      data-url="/products/<%= product._id %>"
+      data-url="/products/<%= product.slug[lang] %>"
         class="card card-compact cursor-pointer shadow-md border border-base-200 rounded-xl overflow-hidden transition-transform hover:scale-[1.02]"
         x-show="activeTab === 'All' || activeTab === '<%= product.category %>'"
         x-transition:enter="transition ease-out duration-300"
