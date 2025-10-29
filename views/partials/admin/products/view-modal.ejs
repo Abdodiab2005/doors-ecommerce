@@ -1,0 +1,146 @@
+<!-- View modal -->
+<dialog x-ref="viewModal" class="modal">
+  <div class="modal-box w-11/12 max-w-4xl bg-white">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+        ✕
+      </button>
+    </form>
+
+    <template x-if="selectedProduct">
+      <div class="space-y-4">
+        <h3
+          class="font-bold text-3xl text-neutral"
+          x-text="selectedProduct.name['<%= lang %>']"
+        ></h3>
+        <a
+          :href="`${baseUrl}/products/${selectedProduct._id}`"
+          target="_blank"
+          class="border-2 border-black py-2 px-4 rounded-2xl flex justify-center w-max items-center gap-2 hover:bg-black hover:text-white transition-colors duration-200"
+        >
+          <i class="fa-solid fa-eye"></i>
+
+          <%= __('admin.products.view_product') %>
+        </a>
+        <p
+          class="text-gray-600"
+          x-text="selectedProduct.description['<%= lang %>']"
+        ></p>
+
+        <div class="flex flex-wrap gap-4">
+          <div class="badge badge-lg badge-secondary text-white">
+            <%= __('admin.products.price_label') %> $<span
+              x-text="selectedProduct.price"
+            ></span>
+          </div>
+          <div class="badge badge-lg badge-outline">
+            <%= __('admin.products.stock_label') %>
+            <span x-text="selectedProduct.stock"></span>
+          </div>
+          <div class="badge badge-lg badge-outline">
+            <%= __('admin.products.category_label') %>
+            <span x-text="selectedProduct.category"></span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h4 class="text-lg font-medium">
+          <%= __('admin.products.default_images') %>
+        </h4>
+        <div class="carousel w-full bg-base-200/50 rounded-box h-64">
+          <template x-for="(img, i) in selectedProduct.images" :key="i">
+            <div :id="'slide' + i" class="carousel-item relative w-full">
+              <img :src="img" class="w-full h-full object-contain" />
+              <div
+                class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2"
+              >
+                <a
+                  :href="'#slide' + (i === 0 ? selectedProduct.images.length - 1 : i - 1)"
+                  class="btn btn-circle btn-sm"
+                  >❮</a
+                >
+                <a
+                  :href="'#slide' + (i === selectedProduct.images.length - 1 ? 0 : i + 1)"
+                  class="btn btn-circle btn-sm"
+                  >❯</a
+                >
+              </div>
+            </div>
+          </template>
+          <div
+            x-show="selectedProduct.images.length === 0"
+            class="w-full flex items-center justify-center"
+          >
+            <span class="text-gray-500"
+              ><%= __('admin.products.no_default_images') %></span
+            >
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h4 class="text-lg font-medium">
+          <%= __('admin.products.available_colors') %>
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <template
+            x-for="(color, c_idx) in selectedProduct.colors"
+            :key="c_idx"
+          >
+            <div class="card card-compact bg-base-200/30">
+              <div class="card-body">
+                <div class="flex items-center gap-3 mb-2">
+                  <div
+                    class="w-8 h-8 rounded-full border-2 border-white shadow"
+                    :style="{ backgroundColor: color.hex }"
+                  ></div>
+                  <span class="card-title text-base" x-text="color.name"></span>
+                </div>
+
+                <div class="carousel w-full bg-white rounded-box h-48">
+                  <template x-for="(img, i_idx) in color.images" :key="i_idx">
+                    <div
+                      :id="'color' + c_idx + 'img' + i_idx"
+                      class="carousel-item relative w-full"
+                    >
+                      <img :src="img" class="w-full h-full object-contain" />
+                      <div
+                        class="absolute flex justify-between transform -translate-y-1/2 left-2 right-2 top-1/2"
+                      >
+                        <a
+                          :href="'#color' + c_idx + 'img' + (i_idx === 0 ? color.images.length - 1 : i_idx - 1)"
+                          class="btn btn-circle btn-xs"
+                          >❮</a
+                        >
+                        <a
+                          :href="'#color' + c_idx + 'img' + (i_idx === color.images.length - 1 ? 0 : i_idx + 1)"
+                          class="btn btn-circle btn-xs"
+                          >❯</a
+                        >
+                      </div>
+                    </div>
+                  </template>
+                  <div
+                    x-show="color.images.length === 0"
+                    class="w-full flex items-center justify-center"
+                  >
+                    <span class="text-gray-500 text-sm"
+                      ><%= __('admin.products.no_images_for_color') %></span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+          <div
+            x-show="selectedProduct.colors.length === 0"
+            class="md:col-span-2 text-center text-gray-500 py-4"
+          >
+            <span><%= __('admin.products.no_specific_colors') %></span>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</dialog>

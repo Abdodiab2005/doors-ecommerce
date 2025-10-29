@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const SettingSchema = new mongoose.Schema(
   {
@@ -6,8 +6,8 @@ const SettingSchema = new mongoose.Schema(
       en: String,
       he: String,
     },
-    email: { type: String, default: "info@yourdomain.com" },
-    phone: { type: String, default: "+201234567890" },
+    email: { type: String, default: 'info@yourdomain.com' },
+    phone: { type: String, default: '+201234567890' },
     whatsapp: { type: String }, // optional
     social: {
       facebook: { type: String },
@@ -18,15 +18,11 @@ const SettingSchema = new mongoose.Schema(
     assets: {
       logo: { type: String }, // path/url
       favicon: { type: String },
-      slider: [{ type: String }], // array of image paths
-      innerDoorsImage: { type: String, default: "/images/inner.jpg" },
-      outerDoorsImage: { type: String, default: "/images/outer.jpg" },
+      slider: { type: String }, // array of image paths
+      innerDoorsImage: { type: String, default: '/images/inner.jpg' },
+      outerDoorsImage: { type: String, default: '/images/outer.jpg' },
     },
     meta: {
-      title: {
-        en: String,
-        he: String,
-      },
       description: {
         en: String,
         he: String,
@@ -35,7 +31,7 @@ const SettingSchema = new mongoose.Schema(
       author: { en: { type: String }, he: { type: String } },
     },
   },
-  { collection: "settings", timestamps: true }
+  { collection: 'settings', timestamps: true }
 );
 
-module.exports = mongoose.model("Setting", SettingSchema);
+module.exports = mongoose.model('Setting', SettingSchema);

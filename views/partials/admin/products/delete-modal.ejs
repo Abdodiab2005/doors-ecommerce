@@ -1,0 +1,19 @@
+<!-- Delete modal -->
+<dialog x-ref="deleteModal" class="modal">
+  <div class="modal-box bg-white">
+    <h3 class="font-bold text-lg text-neutral">
+      <%= __('admin.products.are_you_sure') %>
+    </h3>
+    <p class="py-4"><%= __('admin.products.delete_confirmation') %></p>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn btn-ghost">
+          <%= __('admin.products.cancel') %>
+        </button>
+      </form>
+      <button @click="deleteProduct" class="btn btn-error">
+        <%= __('admin.products.yes_delete') %>
+      </button>
+    </div>
+  </div>
+</dialog>

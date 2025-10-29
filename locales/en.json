@@ -26,7 +26,8 @@
     "get_in_touch_subtitle": "We're here to help you find the perfect door.",
     "call_us": "Call Us",
     "message_on_whatsapp": "Message on WhatsApp",
-    "send_an_email": "Send an Email"
+    "send_an_email": "Send an Email",
+    "home_page": "Home Page"
   },
   "products": {
     "our_doors_collection": "Our Doors Collection",
@@ -101,7 +102,8 @@
       "no_default_images": "No default images available.",
       "available_colors": "Available Colors",
       "no_images_for_color": "No images for this color.",
-      "no_specific_colors": "No specific colors defined."
+      "no_specific_colors": "No specific colors defined.",
+      "thumbnail": "Thumbnail"
     },
     "settings": {
       "title": "Settings",
@@ -141,7 +143,12 @@
       "current_password": "Current password",
       "new_password": "New password",
       "confirm_new_password": "Confirm new password",
-      "preview": "Preview"
+      "preview": "Preview",
+      "credentials": "Credentials",
+      "meta_description_he": "Meta Description (Hebrew)",
+      "meta_description_en": "Meta Description (English)",
+      "site_name_he": "Site Name (Hebrew)",
+      "site_name_en": "Site Name (English)"
     },
     "header": {
       "dashboard": "Dashboard",

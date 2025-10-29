@@ -1,0 +1,40 @@
+<div class="flex justify-center items-center mt-6">
+  <div class="join">
+    <button
+      @click="prevPage"
+      :disabled="!pagination.hasPrevPage"
+      class="join-item btn btn-secondary"
+    >
+      <i class="fa-solid fa-arrow-left"></i>
+      <%= __('admin.products.prev') %>
+    </button>
+
+    <!-- Pagination Numbers -->
+    <template x-for="(page, index) in pageNumbers" :key="index">
+      <div>
+        <button
+          x-show="typeof page === 'string'"
+          class="join-item btn btn-disabled"
+          x-text="page"
+        ></button>
+
+        <button
+          x-show="typeof page === 'number'"
+          @click="goToPage(page)"
+          class="join-item btn"
+          :class="{ 'btn-primary': page === currentPage }"
+          x-text="page"
+        ></button>
+      </div>
+    </template>
+
+    <button
+      @click="nextPage"
+      :disabled="!pagination.hasNextPage"
+      class="join-item btn btn-primary"
+    >
+      <%= __('admin.products.next') %>
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
+</div>

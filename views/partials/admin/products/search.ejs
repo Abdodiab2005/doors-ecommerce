@@ -1,0 +1,21 @@
+<div class="mb-4 p-4 relative w-full max-w-sm">
+  <span class="absolute inset-y-0 left-0 flex items-center pl-7">
+    <i class="fa-solid fa-magnifying-glass text-neutral opacity-40"></i>
+  </span>
+
+  <input
+    type="text"
+    x-model.debounce.500ms="search"
+    placeholder="<%= __('admin.products.search_placeholder') %>"
+    class="input input-bordered w-full pl-10 pr-10 bg-white border-2 border-neutral focus:border-primary"
+  />
+
+  <button
+    type="button"
+    x-show="search.trim().length > 0"
+    @click="search = ''"
+    class="absolute inset-y-0 right-0 flex items-center pr-7 cursor-pointer text-neutral opacity-50 hover:opacity-100 transition-opacity"
+  >
+    <i class="fa-solid fa-circle-xmark"></i>
+  </button>
+</div>

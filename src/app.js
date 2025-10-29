@@ -1,30 +1,31 @@
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
-const morgan = require("morgan");
-const helmet = require("helmet");
-const expressEjsLayouts = require("express-ejs-layouts");
-const session = require("express-session");
-const cookieParser = require("cookie-parser");
-const MongoStore = require("connect-mongo");
-const i18n = require("i18n");
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const morgan = require('morgan');
+const helmet = require('helmet');
+const expressEjsLayouts = require('express-ejs-layouts');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const MongoStore = require('connect-mongo');
+const i18n = require('i18n');
 
 // استيراد الـ Handlers من ملفاتهم
-const notFoundHandler = require("./middlewares/notFound");
-const errorHandler = require("./middlewares/errorHandler");
-const setLocals = require("./middlewares/locals");
-const globalSettings = require("./middlewares/setting.middleware");
+const notFoundHandler = require('./middlewares/notFound');
+const errorHandler = require('./middlewares/errorHandler');
+const setLocals = require('./middlewares/locals');
+const globalSettings = require('./middlewares/setting.middleware');
+const { requireAuth } = require('./middlewares/auth.middleware');
 
 i18n.configure({
-  locales: ["en", "he"],
-  directory: path.join(__dirname, "./../locales"),
-  defaultLocale: "en",
-  cookie: "lang", // optional
+  locales: ['en', 'he'],
+  directory: path.join(__dirname, './../locales'),
+  defaultLocale: 'en',
+  cookie: 'lang', // optional
   autoReload: true,
   syncFiles: false,
   updateFiles: false,
   logErrorFn: function (msg) {
-    console.error("i18n error:", msg);
+    console.error('i18n error:', msg);
   },
   objectNotation: true,
 });
@@ -37,23 +38,23 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        "img-src": [
+        'img-src': [
           "'self'",
-          "data:",
-          "loremflickr.com",
-          "via.placeholder.com",
-          "picsum.photos",
-          "fastly.picsum.photos",
-          "blob:",
+          'data:',
+          'loremflickr.com',
+          'via.placeholder.com',
+          'picsum.photos',
+          'fastly.picsum.photos',
+          'blob:',
         ],
-        "script-src": [
+        'script-src': [
           "'self'",
           "'unsafe-inline'",
-          "cdn.jsdelivr.net",
-          "cdn.tailwindcss.com",
+          'cdn.jsdelivr.net',
+          'cdn.tailwindcss.com',
           "'unsafe-eval'",
         ],
-        connectSrc: ["'self'", "https://cdn.jsdelivr.net"],
+        connectSrc: ["'self'", 'https://cdn.jsdelivr.net'],
       },
     },
   })
@@ -61,21 +62,21 @@ app.use(
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan("dev"));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 app.use(i18n.init);
 
-app.set("trust proxy", 1); // لازم قبل تعريف الـ session
+app.set('trust proxy', 1); // لازم قبل تعريف الـ session
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "verysecretkey",
+    secret: process.env.SESSION_SECRET || 'verysecretkey',
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === 'production',
       maxAge: 1000 * 60 * 60 * 24, // يوم كامل
     },
     store: MongoStore.create({
@@ -85,27 +86,33 @@ app.use(
 );
 
 // --- 2. View Engine Setup ---
-app.set("view engine", "ejs");
-app.set("layout", "layout/main");
+app.set('view engine', 'ejs');
+app.set('layout', 'layout/main');
 app.use(expressEjsLayouts);
 app.use(setLocals);
 const langs = i18n.getLocales();
 
-const homeRoutes = require("./routes/home.routes");
-const productRoutes = require("./routes/product.routes");
+const homeRoutes = require('./routes/home.routes');
+const productRoutes = require('./routes/product.routes');
 
 // --- 3. Routes ---
-app.use(require("./middlewares/lang"));
+app.use(require('./middlewares/lang'));
 app.use(globalSettings);
-app.use("/", require("./routes/meta.routes"));
-app.use("/", require("./routes/lang.routes"));
-app.use("/", homeRoutes);
-app.use("/products", productRoutes);
+app.use('/', require('./routes/meta.routes'));
+app.use('/', require('./routes/lang.routes'));
+app.use('/', homeRoutes);
+app.use('/products', productRoutes);
 
 // Admin routes
-app.use("/admin", require("./routes/auth.routes"));
-app.use("/admin", require("./routes/admin.routes"));
-app.use("/admin", require("./routes/settings.routes"));
+app.use('/admin', require('./routes/auth.routes'));
+app.use('/admin', require('./routes/admin.routes'));
+app.use('/admin', require('./routes/settings.routes'));
+
+app.use(
+  '/admin-files',
+  requireAuth,
+  express.static(path.join(__dirname, 'protected_assets'))
+);
 
 langs.forEach((lang) => {
   app.use(`/${lang}`, homeRoutes);

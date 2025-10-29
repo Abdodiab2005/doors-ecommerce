@@ -26,7 +26,8 @@
     "get_in_touch_subtitle": "אנחנו כאן כדי לעזור לך למצוא את הדלת המושלמת.",
     "call_us": "התקשר אלינו",
     "message_on_whatsapp": "שלח הודעה בוואטסאפ",
-    "send_an_email": "שלח אימייל"
+    "send_an_email": "שלח אימייל",
+    "home_page": "עמוד בית"
   },
   "products": {
     "our_doors_collection": "קולקציית הדלתות שלנו",
@@ -101,7 +102,8 @@
       "no_default_images": "אין תמונות ברירת מחדל זמינות.",
       "available_colors": "צבעים זמינים",
       "no_images_for_color": "אין תמונות לצבע זה.",
-      "no_specific_colors": "לא הוגדרו צבעים ספציפיים."
+      "no_specific_colors": "לא הוגדרו צבעים ספציפיים.",
+      "thumbnail": "תמונה קטנה"
     },
     "settings": {
       "title": "הגדרות",
@@ -141,7 +143,12 @@
       "current_password": "סיסמה נוכחית",
       "new_password": "סיסמה חדשה",
       "confirm_new_password": "אשר סיסמה חדשה",
-      "preview": "תצוגה מקדימה"
+      "preview": "תצוגה מקדימה",
+      "credentials": "פרטי משתמש",
+      "meta_description_he": "תיאור מטא (עברית)",
+      "meta_description_en": "תיאור מטא (אנגלית)",
+      "site_name_he": "שם האתר (עברית)",
+      "site_name_en": "שם האתר (אנגלית)"
     },
     "header": {
       "dashboard": "לוח בקרה",

@@ -1,0 +1,28 @@
+<aside
+  class="md:w-56 border-b md:border-b-0 md:border-r border-slate-200 p-4 bg-white"
+>
+  <% const btns = [ { name: __('admin.settings.general'), tab: 'general' }, {
+  name: __('admin.settings.assets'), tab: 'assets' }, { name:
+  __('admin.settings.contact_socials'), tab: 'contact' }, { name:
+  __('admin.settings.credentials'), tab: 'credentials' } ] %>
+  <nav class="flex flex-col gap-2">
+    <% btns.forEach(btn => { %>
+    <button
+      :class="tab==='<%= btn.tab %>'? 'btn btn-primary justify-start text-white' : 'btn btn-ghost justify-start'"
+      @click="tab='<%= btn.tab %>'"
+    >
+      <%= btn.name %>
+    </button>
+    <% }) %>
+
+    <form
+      action="/admin/settings/reset"
+      method="post"
+      class="mt-4 pt-4 border-t border-slate-200"
+    >
+      <button type="submit" class="btn btn-sm btn-outline btn-error w-full">
+        <%= __('admin.settings.reset_to_defaults') %>
+      </button>
+    </form>
+  </nav>
+</aside>

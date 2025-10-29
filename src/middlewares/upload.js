@@ -1,28 +1,32 @@
-const path = require("path");
-const multer = require("multer");
-const fs = require("fs");
+const path = require('path');
+const multer = require('multer');
+const fs = require('fs');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const category = req.body.category;
-    let subfolder = "other-products";
-
-    if (category === "inner") {
-      subfolder = "inner-doors";
-    } else if (category === "main") {
-      subfolder = "main-doors";
+    // لو المسار خاص بالإعدادات
+    if (req.originalUrl.includes('/settings')) {
+      const base = path.join(__dirname, '..', 'public', 'images');
+      fs.mkdirSync(base, { recursive: true });
+      return cb(null, base);
     }
 
-    const base = path.join(__dirname, "..", "public", "images", subfolder);
+    // باقي الحالات (منتجات)
+    const category = req.body.category;
+    let subfolder = 'other-products';
 
+    if (category === 'inner') subfolder = 'inner-doors';
+    else if (category === 'main') subfolder = 'main-doors';
+
+    const base = path.join(__dirname, '..', 'public', 'images', subfolder);
     fs.mkdirSync(base, { recursive: true });
     cb(null, base);
   },
   filename: function (req, file, cb) {
     const safe = file.originalname
       .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9\.\-]/g, "");
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9\.\-]/g, '');
     const name = `${Date.now()}-${safe}`;
     cb(null, name);
   },
@@ -32,8 +36,8 @@ const storage = multer.diskStorage({
 function fileFilter(req, file, cb) {
   const allowed = /jpeg|jpg|png|webp|svg|ico/;
   const ext = path.extname(file.originalname).toLowerCase();
-  if (allowed.test(ext.replace(".", ""))) cb(null, true);
-  else cb(new Error("Only images allowed"), false);
+  if (allowed.test(ext.replace('.', ''))) cb(null, true);
+  else cb(new Error('Only images allowed'), false);
 }
 
 const limits = {

@@ -1,0 +1,84 @@
+<section x-show="tab==='general'" x-cloak>
+  <form
+    action="/admin/settings"
+    method="post"
+    enctype="multipart/form-data"
+    class="space-y-6"
+  >
+    <input type="hidden" name="_method" value="POST" />
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Site Name (English) -->
+      <div>
+        <label class="label">
+          <span class="label-text text-slate-700">
+            <%= __('admin.settings.site_name_en') %>
+          </span>
+        </label>
+        <input
+          name="siteName[en]"
+          type="text"
+          value="<%= settings?.siteName?.en || '' %>"
+          class="input input-bordered w-full bg-slate-50 border-slate-300 focus:bg-white focus:ring-primary/50 focus:border-primary transition-colors duration-200"
+          placeholder="Site name (English)"
+        />
+      </div>
+
+      <!-- Site Name (Hebrew) -->
+      <div>
+        <label class="label">
+          <span class="label-text text-slate-700">
+            <%= __('admin.settings.site_name_he') %>
+          </span>
+        </label>
+        <input
+          name="siteName[he]"
+          type="text"
+          value="<%= settings?.siteName?.he || '' %>"
+          class="input input-bordered w-full bg-slate-50 border-slate-300 focus:bg-white focus:ring-primary/50 focus:border-primary transition-colors duration-200"
+          placeholder="Site name (Hebrew)"
+        />
+      </div>
+
+      <!-- Meta Description (English) -->
+      <div class="md:col-span-1">
+        <label class="label">
+          <span class="label-text text-slate-700">
+            <%= __('admin.settings.meta_description_en') %>
+          </span>
+        </label>
+        <textarea
+          name="metaDescription[en]"
+          class="textarea textarea-bordered w-full bg-slate-50 border-slate-300 focus:bg-white focus:ring-primary/50 focus:border-primary transition-colors duration-200"
+          rows="3"
+          placeholder="Meta description (English)"
+        >
+<%- settings?.meta?.description?.en || '' %></textarea
+        >
+      </div>
+
+      <!-- Meta Description (Hebrew) -->
+      <div class="md:col-span-1">
+        <label class="label">
+          <span class="label-text text-slate-700">
+            <%= __('admin.settings.meta_description_he') %>
+          </span>
+        </label>
+        <textarea
+          name="metaDescription[he]"
+          class="textarea textarea-bordered w-full bg-slate-50 border-slate-300 focus:bg-white focus:ring-primary/50 focus:border-primary transition-colors duration-200"
+          rows="3"
+          placeholder="Meta description (Hebrew)"
+        >
+<%- settings?.meta?.description?.he || '' %></textarea
+        >
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-4 border-t border-slate-200">
+      <button type="submit" class="btn btn-primary">
+        <%= __('admin.settings.save_general') %>
+      </button>
+    </div>
+  </form>
+</section>

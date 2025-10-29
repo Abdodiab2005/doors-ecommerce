@@ -1,30 +1,47 @@
 <main class="max-w-6xl mx-auto px-4 py-8">
-  <h1 class="text-2xl font-semibold text-gray-800 mb-6"><%= __('admin.dashboard.title') %></h1>
+  <h1 class="text-2xl font-semibold text-gray-800 mb-6">
+    <%= __('admin.dashboard.title') %>
+  </h1>
 
-  <!-- كروت إحصائيات -->
+  <% const cards = [ { title: __('admin.dashboard.total_products'), count:
+  stats.totalProducts || 0, id: 'totalProducts' }, { title:
+  __('admin.dashboard.internal_doors'), count: stats.innerCount || 0, id:
+  'internalDoors' }, { title: __('admin.dashboard.external_doors'), count:
+  stats.mainCount || 0, id: 'externalDoors' }, ] %>
+
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="bg-white rounded-xl shadow p-6">
-      <h2 class="text-gray-500 text-sm"><%= __('admin.dashboard.total_products') %></h2>
-      <p class="text-3xl font-bold mt-2"><%= stats.totalProducts || 0 %></p>
+    <% cards.forEach(card => { %>
+    <div
+      id="<%= card.id %>"
+      class="bg-white card rounded-xl shadow p-6 hover:bg-[#242425] transition duration-200 cursor-pointer hover:text-white hover:border-[#242425] hover:-translate-y-1.5"
+    >
+      <h2 class="text-gray-500 text-sm"><%= card.title %></h2>
+      <p class="text-3xl font-bold mt-2"><%= card.count %></p>
     </div>
-
-    <div class="bg-white rounded-xl shadow p-6">
-      <h2 class="text-gray-500 text-sm"><%= __('admin.dashboard.internal_doors') %></h2>
-      <p class="text-3xl font-bold mt-2"><%= stats.innerCount || 0 %></p>
-    </div>
-
-    <div class="bg-white rounded-xl shadow p-6">
-      <h2 class="text-gray-500 text-sm"><%= __('admin.dashboard.external_doors') %></h2>
-      <p class="text-3xl font-bold mt-2"><%= stats.mainCount || 0 %></p>
-    </div>
+    <% }) %>
   </div>
 
-  <!-- آخر تعديل -->
-  <div class="mt-10 bg-white rounded-xl shadow p-6">
-    <h2 class="text-lg font-semibold mb-2"><%= __('admin.dashboard.last_settings_update') %></h2>
+  <div
+    id="settingCard"
+    class="mt-10 bg-white rounded-xl shadow p-6 hover:bg-[#242425] transition duration-200 ease-in-out cursor-pointer hover:text-white"
+  >
+    <h2 class="text-lg font-semibold mb-2">
+      <%= __('admin.dashboard.last_settings_update') %>
+    </h2>
     <p class="text-gray-600 text-sm">
       <%= stats.settingsUpdatedAt ? new
       Date(stats.settingsUpdatedAt).toLocaleString('ar-EG') : '—' %>
     </p>
   </div>
 </main>
+<script>
+  document.querySelectorAll('.card').forEach((card) => {
+    card.addEventListener('click', () => {
+      location.href = `/admin/products`;
+    });
+  });
+
+  document.getElementById('settingCard').addEventListener('click', () => {
+    location.href = `/admin/settings`;
+  });
+</script>

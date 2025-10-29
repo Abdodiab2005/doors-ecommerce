@@ -20,7 +20,7 @@
   class="py-16 px-4 md:py-24 lg:py-32 flex items-center justify-center text-center relative overflow-hidden rounded-2xl"
   style="
     background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.6)),
-      url('/images/hero.jpg');
+      url('<%= settings?.assets?.slider %>');
     background-size: cover;
     background-position: center;
   "
@@ -34,38 +34,6 @@
     </p>
   </div>
 </section>
-
-<!-- Features Section -->
-<!-- <section class="py-20 px-6 md:px-12 bg-[#DED9D3] text-[#242425]">
-  <div class="max-w-6xl mx-auto text-center mb-12">
-    <h2 class="text-3xl font-bold mb-4">Why Choose Us?</h2>
-    <p class="text-[#ACA59B]">
-      Combining craftsmanship, durability, and timeless design — every door
-      tells a story.
-    </p>
-  </div>
-
-   <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-6xl mx-auto">
-    <%# if (features && features.length > 0) { %> <%# features.forEach(feature =>
-    { %>
-
-    <div
-      class="glass rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-8 text-center flex flex-col items-center"
-    >
-      <div
-        class="w-16 h-16 flex items-center justify-center rounded-full bg-[#242425] text-white mb-6"
-      >
-        <i class="<%# feature.icon %> text-2xl"></i>
-      </div>
-
-      <h3 class="text-xl font-semibold mb-3"><%# feature.title %></h3>
-
-      <p class="text-[#ACA59B] text-sm"><%# feature.description %></p>
-    </div>
-
-    <%# }) %> <%# } %>
-  </div>
-</section> -->
 
 <!-- Categories Section -->
 <section class="py-20 px-6 md:px-12 lg:px-24">
@@ -127,14 +95,14 @@
 
   <div class="flex flex-col sm:flex-row justify-center gap-4 flex-wrap">
     <a
-      href="tel:+201234567890"
+      href="tel:<%= settings?.phone %>"
       class="flex items-center justify-center gap-2 min-w-[200px] h-14 px-6 bg-primary text-white rounded-xl hover:scale-105 transition-transform"
     >
       <i class="fa-solid fa-phone text-xl"></i> <%= __('index.call_us') %>
     </a>
 
     <a
-      href="https://wa.me/201234567890"
+      href="https://wa.me/<%= settings?.whatsapp %>"
       class="flex items-center justify-center gap-2 min-w-[200px] h-14 px-6 bg-primary text-white rounded-xl hover:scale-105 transition-transform"
     >
       <i class="fa-brands fa-whatsapp text-xl"></i> <%=
@@ -142,7 +110,7 @@
     </a>
 
     <a
-      href="mailto:info@yourdomain.com"
+      href="mailto:<%= settings?.email %>"
       class="flex items-center justify-center gap-2 min-w-[200px] h-14 px-6 bg-primary text-white rounded-xl hover:scale-105 transition-transform"
     >
       <i class="fa-solid fa-envelope text-xl"></i> <%= __('index.send_an_email')
@@ -151,12 +119,12 @@
   </div>
 </section>
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const fadeEls = document.querySelectorAll(".animate-fade-in");
+  document.addEventListener('DOMContentLoaded', () => {
+    const fadeEls = document.querySelectorAll('.animate-fade-in');
     fadeEls.forEach((el, i) => {
       el.style.opacity = 0;
       setTimeout(() => {
-        el.style.transition = "opacity 1s ease";
+        el.style.transition = 'opacity 1s ease';
         el.style.opacity = 1;
       }, i * 200);
     });

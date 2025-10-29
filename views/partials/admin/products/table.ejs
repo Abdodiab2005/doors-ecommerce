@@ -1,0 +1,55 @@
+<table class="table w-full">
+  <thead class="bg-secondary text-neutral font-semibold">
+    <tr>
+      <th class="p-4"><%= __('admin.products.thumbnail') %></th>
+      <th class="p-4"><%= __('admin.products.name') %></th>
+      <th class="p-4"><%= __('admin.products.category') %></th>
+      <th class="p-4"><%= __('admin.products.price') %></th>
+      <th class="p-4"><%= __('admin.products.stock') %></th>
+      <th class="p-4"><%= __('admin.products.actions') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <template x-for="product in products" :key="product._id">
+      <tr
+        class="hover:bg-secondary duration-200 transition-all cursor-pointer"
+        @click="openViewModal(product)"
+      >
+        <td class="p-4">
+          <img
+            :src="product.thumbnail? product.thumbnail : product.images[0]"
+            class="w-12 h-12 object-cover rounded-md border"
+          />
+        </td>
+        <td class="p-4">
+          <a
+            href="#"
+            @click.prevent.stop="openViewModal(product)"
+            class="font-medium hover:underline"
+            x-text="product.name['<%= lang %>']"
+          >
+          </a>
+        </td>
+        <td class="p-4" x-text="product.category['<%= lang %>']"></td>
+        <td class="p-4">$<span x-text="(product.price).toFixed(2)"></span></td>
+        <td class="p-4" x-text="product.stock"></td>
+        <td class="p-4 whitespace-nowrap space-x-2">
+          <button
+            @click.stop="openEditModal(product)"
+            class="btn btn-sm btn-secondary"
+          >
+            <i class="fa-solid fa-pen-to-square"></i>
+            <%= __('admin.products.edit') %>
+          </button>
+          <button
+            @click.stop="confirmDelete(product._id)"
+            class="btn btn-sm btn-error"
+          >
+            <i class="fa-solid fa-trash-can"></i>
+            <%= __('admin.products.delete') %>
+          </button>
+        </td>
+      </tr>
+    </template>
+  </tbody>
+</table>

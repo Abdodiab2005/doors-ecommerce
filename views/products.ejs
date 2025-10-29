@@ -71,12 +71,6 @@
             </span>
               <% } %>
           </div>
-          <a
-            href="/products/<%= product._id %><%= searchQuery? '&q=' + searchQuery : '' %>"
-            class="text-sm text-secondary hover:text-primary transition-colors mt-1"
-          >
-            <%= __('products.view_details') %>
-          </a>
         </div>
       </div>
       <% }) %> <% } else { %>
@@ -111,11 +105,11 @@
   </div>
 </section>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const cards = document.querySelectorAll(".card");
+  document.addEventListener('DOMContentLoaded', function () {
+    const cards = document.querySelectorAll('.card');
     cards.forEach((card) => {
-      card.addEventListener("click", function () {
-        const url = this.getAttribute("data-url");
+      card.addEventListener('click', function () {
+        const url = this.getAttribute('data-url');
         window.location.href = url;
       });
     });
