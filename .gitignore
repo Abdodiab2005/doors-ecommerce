@@ -1,5 +1,4 @@
 logs
 node_modules
 .env
-src/public/images/inner-doors
-src/public/images/main-doors
+src/public/images
