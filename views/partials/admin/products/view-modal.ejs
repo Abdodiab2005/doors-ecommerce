@@ -1,3 +1,10 @@
+<script>
+  const baseUrl = "<%= req.protocol + '://' + req.get('host') %>";
+  console.log(baseUrl);
+  const lang = '<%= lang %>';
+  console.log(lang);
+</script>
+
 <!-- View modal -->
 <dialog x-ref="viewModal" class="modal">
   <div class="modal-box w-11/12 max-w-4xl bg-white">
@@ -14,14 +21,14 @@
           x-text="selectedProduct.name['<%= lang %>']"
         ></h3>
         <a
-          :href="`${baseUrl}/products/${selectedProduct._id}`"
+          :href="`<%= req.protocol + '://' + req.get('host') %>/products/${selectedProduct.slug['<%= lang %>']}`"
           target="_blank"
           class="border-2 border-black py-2 px-4 rounded-2xl flex justify-center w-max items-center gap-2 hover:bg-black hover:text-white transition-colors duration-200"
         >
           <i class="fa-solid fa-eye"></i>
-
           <%= __('admin.products.view_product') %>
         </a>
+
         <p
           class="text-gray-600"
           x-text="selectedProduct.description['<%= lang %>']"
