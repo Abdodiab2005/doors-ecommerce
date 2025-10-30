@@ -21,6 +21,9 @@ const SettingSchema = new mongoose.Schema(
       slider: { type: String }, // array of image paths
       innerDoorsImage: { type: String, default: '/images/inner.jpg' },
       outerDoorsImage: { type: String, default: '/images/outer.jpg' },
+      icon16: { type: String },
+      icon192: { type: String },
+      icon512: { type: String },
     },
     meta: {
       description: {

@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "seed": "node scripts/seedProducts.js && node scripts/seedSettings.js && node scripts/seedAdmin.js"
+    "seed": "node scripts/seedProducts.js && node scripts/seedSettings.js && node scripts/seedAdmin.js",
+    "build:css": "tailwindcss -i ./src/public/css/input.css -o ./src/public/css/style.css --minify",
+    "watch:css": "tailwindcss -i ./src/public/css/input.css -o ./src/public/css/style.css --watch"
   },
   "keywords": [],
   "author": "",
