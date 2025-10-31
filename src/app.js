@@ -103,7 +103,6 @@ const productRoutes = require('./routes/product.routes');
 // --- 3. Routes ---
 app.use(require('./middlewares/lang'));
 app.use(globalSettings);
-app.use(rateLimiter);
 app.use('/', require('./routes/meta.routes'));
 app.use('/', require('./routes/lang.routes'));
 app.use('/', homeRoutes);
@@ -111,8 +110,13 @@ app.use('/products', productRoutes);
 
 // Admin routes
 app.use('/admin', require('./routes/auth.routes'));
+app.use(requireAuth);
 app.use('/admin', require('./routes/admin.routes'));
 app.use('/admin', require('./routes/settings.routes'));
+app.use(
+  '/admin-files',
+  express.static(path.join(__dirname, 'protected_assets'))
+);
 
 // --- 4. Error Handling ---
 // 404 Handler
