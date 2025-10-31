@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/mgeksisycr/doors-ecommerce.leviro.net
+    - /bin/cp -R * $DEPLOYPATH
