@@ -107,7 +107,10 @@
               <i class="fas fa-spinner fa-spin h-5 w-5 text-primary"></i>
             </div>
 
-            <template x-for="suggestion in suggestions" :key="suggestion.slug">
+            <template
+              x-for="suggestion in suggestions"
+              :key="suggestion.slug['<%= lang %>']"
+            >
               <a
                 :href="'/products/' + suggestion.slug['<%= lang %>']"
                 @click.prevent="navigateToSuggestion(suggestion)"
