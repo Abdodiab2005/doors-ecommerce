@@ -30,7 +30,7 @@ i18n.configure({
   syncFiles: settings.i18n.syncFiles,
   updateFiles: settings.i18n.updateFiles,
   logErrorFn: function (msg) {
-    console.error('i18n error:', msg);
+    logger.error('i18n error:', msg);
   },
   objectNotation: true,
 });
@@ -58,6 +58,11 @@ app.use(morgan(settings.logging.format));
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  '/admin-files',
+  requireAuth,
+  express.static(path.join(__dirname, 'protected_assets'))
+);
 
 // Cookie parser
 app.use(cookieParser());
@@ -98,6 +103,7 @@ const productRoutes = require('./routes/product.routes');
 // --- 3. Routes ---
 app.use(require('./middlewares/lang'));
 app.use(globalSettings);
+app.use(rateLimiter);
 app.use('/', require('./routes/meta.routes'));
 app.use('/', require('./routes/lang.routes'));
 app.use('/', homeRoutes);
@@ -107,12 +113,6 @@ app.use('/products', productRoutes);
 app.use('/admin', require('./routes/auth.routes'));
 app.use('/admin', require('./routes/admin.routes'));
 app.use('/admin', require('./routes/settings.routes'));
-
-app.use(
-  '/admin-files',
-  requireAuth,
-  express.static(path.join(__dirname, 'protected_assets'))
-);
 
 // --- 4. Error Handling ---
 // 404 Handler
