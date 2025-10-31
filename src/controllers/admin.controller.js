@@ -217,7 +217,7 @@ exports.createProduct = async (req, res, next) => {
     const created = await Product.create(productData);
 
     // Invalidate product cache
-    await invalidateCache('cache:*products*');
+    await invalidateCache('*products*');
 
     // استجابة نجاح (تفترض وجود دالة success)
     return success(res, "Product created successfully", created);
@@ -401,7 +401,7 @@ exports.updateProduct = async (req, res, next) => {
     });
 
     // Invalidate product cache
-    await invalidateCache('cache:*products*');
+    await invalidateCache('*products*');
 
     success(res, "Product updated successfully", updated);
   } catch (error) {
@@ -475,7 +475,7 @@ exports.deleteProduct = async (req, res, next) => {
     await product.deleteOne();
 
     // Invalidate product cache
-    await invalidateCache('cache:*products*');
+    await invalidateCache('*products*');
 
     success(res, "Product deleted successfully", product);
   } catch (error) {

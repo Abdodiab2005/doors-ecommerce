@@ -17,16 +17,6 @@ module.exports = {
     },
   },
 
-  // Redis Configuration (for caching and sessions)
-  redis: {
-    enabled: process.env.REDIS_ENABLED === 'true',
-    host: process.env.REDIS_HOST || 'localhost',
-    port: parseInt(process.env.REDIS_PORT || '6379', 10),
-    password: process.env.REDIS_PASSWORD || undefined,
-    db: parseInt(process.env.REDIS_DB || '0', 10),
-    ttl: parseInt(process.env.REDIS_TTL || '3600', 10), // 1 hour default
-  },
-
   // Session Configuration
   session: {
     secret: process.env.SESSION_SECRET,
@@ -88,15 +78,15 @@ module.exports = {
     allowedExtensions: ['jpeg', 'jpg', 'png', 'webp', 'svg', 'ico'],
   },
 
-  // Cache Configuration
+  // Cache Configuration (In-Memory using node-cache)
   cache: {
     enabled: process.env.CACHE_ENABLED === 'true',
-    defaultTTL: parseInt(process.env.CACHE_DEFAULT_TTL || '3600', 10), // 1 hour
+    defaultTTL: parseInt(process.env.CACHE_DEFAULT_TTL || '3600', 10), // 1 hour in seconds
     products: {
-      ttl: parseInt(process.env.CACHE_PRODUCTS_TTL || '1800', 10), // 30 minutes
+      ttl: parseInt(process.env.CACHE_PRODUCTS_TTL || '1800', 10), // 30 minutes in seconds
     },
     settings: {
-      ttl: parseInt(process.env.CACHE_SETTINGS_TTL || '86400', 10), // 24 hours
+      ttl: parseInt(process.env.CACHE_SETTINGS_TTL || '86400', 10), // 24 hours in seconds
     },
   },
 

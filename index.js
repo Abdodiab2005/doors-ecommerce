@@ -2,7 +2,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const connectDB = require("./src/config/db");
-const { initRedis, closeRedis } = require("./src/config/redis");
 const app = require("./src/app");
 const logger = require("./src/utils/logger");
 const settings = require("./src/config/settings");
@@ -16,30 +15,20 @@ async function startServer() {
     await connectDB();
     logger.info("✅ Database connected");
 
-    // Initialize Redis (if enabled)
-    if (settings.redis.enabled) {
-      await initRedis();
-    }
-
     // Start HTTP server
     const server = app.listen(PORT, () => {
       logger.info(`🚀 Server running on http://localhost:${PORT}`);
       logger.info(`📝 Environment: ${settings.server.env}`);
       logger.info(`🔒 Rate limiting: enabled`);
-      logger.info(`💾 Cache: ${settings.cache.enabled ? 'enabled' : 'disabled'}`);
+      logger.info(`💾 Cache: ${settings.cache.enabled ? 'enabled (in-memory)' : 'disabled'}`);
     });
 
     // Graceful shutdown
     const gracefulShutdown = async (signal) => {
       logger.info(`\n${signal} received, closing server gracefully...`);
 
-      server.close(async () => {
+      server.close(() => {
         logger.info("HTTP server closed");
-
-        // Close Redis connection
-        await closeRedis();
-
-        // Exit process
         process.exit(0);
       });
 
