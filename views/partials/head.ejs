@@ -1,0 +1,192 @@
+<head>
+  <meta
+    name="debug-req"
+    content="<%= typeof req !== 'undefined' ? 'req exists' : 'req undefined' %>"
+  />
+  <!-- prettier-ignore -->
+  <%
+const locale = lang || 'en';
+const siteUrl = process.env.SITE_URL || `${req.protocol}://${req.host}`; // ✅ req.host مش req.get('host')
+const title = settings?.meta?.title?.[locale] || settings?.siteName?.[locale] || 'Doors Shop';
+const description = settings?.meta?.description?.[locale] || 'Discover high-quality interior and exterior doors.';
+const author = settings?.meta?.author?.[locale] || 'Leviro Inc.';
+const siteName = settings?.siteName?.[locale] || 'Doors Shop';
+const imageRelative = settings?.assets?.logo || '/images/default-meta.jpg';
+const image = imageRelative.startsWith('http') ? imageRelative : siteUrl + imageRelative;
+const url = siteUrl + req.url; // ✅ req.url مش req.get
+const keywords = settings?.meta?.keywords?.[locale] || 'doors, interior doors, exterior doors, home improvement';
+%>
+  <!-- Basic Meta -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- Primary Meta Tags -->
+  <title><%= title %></title>
+  <meta name="title" content="<%= title %>" />
+  <meta name="description" content="<%= description %>" />
+  <meta name="keywords" content="<%= keywords %>" />
+  <meta name="author" content="<%= author %>" />
+  <meta
+    name="robots"
+    content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+  />
+  <link rel="canonical" href="<%= url %>" />
+
+  <!-- Application Meta -->
+  <meta name="application-name" content="<%= siteName %>" />
+  <meta name="theme-color" content="#242425" />
+  <meta name="color-scheme" content="light" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="<%= siteName %>" />
+  <meta property="og:title" content="<%= title %>" />
+  <meta property="og:description" content="<%= description %>" />
+  <meta property="og:image" content="<%= image %>" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="<%= title %>" />
+  <meta property="og:url" content="<%= url %>" />
+  <meta
+    property="og:locale"
+    content="<%= locale === 'he' ? 'he_IL' : 'en_US' %>"
+  />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="<%= title %>" />
+  <meta name="twitter:description" content="<%= description %>" />
+  <meta name="twitter:image" content="<%= image %>" />
+  <meta name="twitter:image:alt" content="<%= title %>" />
+  <% if (settings?.social?.twitter) { %>
+  <meta name="twitter:site" content="<%= settings.social.twitter %>" />
+  <meta name="twitter:creator" content="<%= settings.social.twitter %>" />
+  <% } %>
+
+  <!-- Favicons & Icons -->
+  <% if (settings?.assets?.favicon) { %>
+  <link rel="icon" type="image/x-icon" href="<%= settings.assets.favicon %>" />
+  <link rel="shortcut icon" href="<%= settings.assets.favicon %>" />
+  <% } %>
+
+  <!-- Apple Touch Icons -->
+  <% if (settings?.assets?.icon192) { %>
+  <link
+    rel="apple-touch-icon"
+    sizes="192x192"
+    href="<%= settings.assets.icon192 %>"
+  />
+  <% } %> <% if (settings?.assets?.icon512) { %>
+  <link
+    rel="apple-touch-icon"
+    sizes="512x512"
+    href="<%= settings.assets.icon512 %>"
+  />
+  <% } %>
+
+  <!-- Language alternates for SEO -->
+  <link
+    rel="alternate"
+    hreflang="en"
+    href="<%= siteUrl + '/en' + locals.req.path %>"
+  />
+  <link
+    rel="alternate"
+    hreflang="he"
+    href="<%= siteUrl + '/he' + locals.req.path %>"
+  />
+  <link
+    rel="alternate"
+    hreflang="x-default"
+    href="<%= siteUrl + locals.req.path %>"
+  />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="<%= siteName %>" />
+
+  <!-- Performance & Security -->
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+
+  <!-- Structured Data (JSON-LD) for Rich Snippets -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "<%= siteName %>",
+      "url": "<%= siteUrl %>",
+      "description": "<%= description %>",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "<%= siteUrl %>/products?search={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>
+
+  <% if (settings?.social) { %>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "<%= siteName %>",
+      "url": "<%= siteUrl %>",
+      "logo": "<%= image %>",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "<%= settings.phone || '' %>",
+        "email": "<%= settings.email || '' %>",
+        "contactType": "customer service"
+      },
+      "sameAs": [
+        <% if (settings.social.facebook) { %>"<%= settings.social.facebook %>",<% } %>
+        <% if (settings.social.instagram) { %>"<%= settings.social.instagram %>",<% } %>
+        <% if (settings.social.twitter) { %>"<%= settings.social.twitter %>",<% } %>
+        <% if (settings.social.tiktok) { %>"<%= settings.social.tiktok %>"<% } %>
+      ].filter(Boolean)
+    }
+  </script>
+  <% } %>
+
+  <!-- Stylesheets -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    referrerpolicy="no-referrer"
+  />
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <!-- Scripts -->
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js"
+    referrerpolicy="no-referrer"
+  ></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('/js/service-worker.js')
+          .then((registration) => {
+            console.log('✅ Service Worker registered:', registration.scope);
+          })
+          .catch((error) => {
+            console.warn('⚠️ Service Worker registration failed:', error);
+          });
+      });
+    }
+  </script>
+</head>

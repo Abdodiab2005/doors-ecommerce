@@ -4,6 +4,7 @@ const AppError = require("../utils/AppError");
 const logger = require("../utils/logger");
 const { success } = require("../utils/response");
 const _maybeDeleteFile = require("../utils/mayBeDelete");
+const { invalidateCache } = require("../middlewares/cache");
 
 exports.renderLoginPage = (req, res) => {
   try {
@@ -215,6 +216,9 @@ exports.createProduct = async (req, res, next) => {
     // === إنشاء المنتج ===
     const created = await Product.create(productData);
 
+    // Invalidate product cache
+    await invalidateCache('*products*');
+
     // استجابة نجاح (تفترض وجود دالة success)
     return success(res, "Product created successfully", created);
   } catch (error) {
@@ -396,6 +400,9 @@ exports.updateProduct = async (req, res, next) => {
       new: true,
     });
 
+    // Invalidate product cache
+    await invalidateCache('*products*');
+
     success(res, "Product updated successfully", updated);
   } catch (error) {
     console.error("Error updating product:", error);
@@ -466,6 +473,9 @@ exports.deleteProduct = async (req, res, next) => {
     }
 
     await product.deleteOne();
+
+    // Invalidate product cache
+    await invalidateCache('*products*');
 
     success(res, "Product deleted successfully", product);
   } catch (error) {

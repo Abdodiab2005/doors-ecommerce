@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-8 md:gap-6">
+      <div class="grid grid-cols-1 gap-8 md:gap-6">
         <div>
           <h3 class="text-lg font-semibold mb-4 text-white">
             <%= __('footer.quick_links') %>
@@ -74,7 +74,7 @@
             <%= __('footer.contact_us') %>
           </h3>
           <ul class="space-y-4 text-sm">
-            <li class="flex gap-3 items-center">
+            <li class="flex gap-3 items-center text-wrap">
               <i class="fa-solid fa-envelope"></i>
               <a href="mailto:<%= settings?.email %>" class="hover:text-white">
                 <%= settings?.email %>

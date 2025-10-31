@@ -1,6 +1,6 @@
 // src/controllers/sitemap.controller.js
 const Product = require('../models/Product.model');
-const i18n = require('i18n');
+const settings = require('../config/settings');
 
 const createUrlEntry = (loc, priority, lastmod, alternates) => {
   const lastmodTag = lastmod ? `\n  <lastmod>${lastmod}</lastmod>` : '';
@@ -14,9 +14,9 @@ const createUrlEntry = (loc, priority, lastmod, alternates) => {
 
 exports.getSitemap = async (req, res, next) => {
   try {
-    const langs = i18n.getLocales(); // ['en', 'he']
-    const primaryLang = langs[0]; // 'en'
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const langs = settings.i18n.locales;
+    const primaryLang = settings.i18n.defaultLocale;
+    const baseUrl = settings.domain;
     const urlEntries = [];
 
     // --- 1. الصفحات العامة (Static Pages) ---
