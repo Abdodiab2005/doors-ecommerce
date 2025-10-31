@@ -2,6 +2,9 @@
 // Centralized configuration for the application
 
 module.exports = {
+  // Domain Configuration
+  domain: process.env.SITE_URL,
+
   // Server Configuration
   server: {
     port: process.env.PORT || 3000,
@@ -64,7 +67,7 @@ module.exports = {
     // Rate limiting for API endpoints
     api: {
       windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 50, // limit each IP to 50 API requests per windowMs
+      max: 500, // limit each IP to 500 API requests per windowMs
       message: 'Too many API requests, please try again later.',
       standardHeaders: true,
       legacyHeaders: false,
@@ -127,6 +130,8 @@ module.exports = {
           'cdn.tailwindcss.com',
           'cdnjs.cloudflare.com',
         ],
+        frameSrc: ["'none'"], // يمنع iframes
+        upgradeInsecureRequests: [], // يجبر كل الروابط تكون https
       },
     },
   },

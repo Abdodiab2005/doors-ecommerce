@@ -15,8 +15,8 @@
     <meta name="theme-color" content="#000000" />
 
     <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/js/service-worker.js");
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/js/service-worker.js');
       }
     </script>
 
@@ -28,16 +28,16 @@
       referrerpolicy="no-referrer"
     />
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js"
     ></script>
+
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -82,7 +82,7 @@
           ],
         },
       };
-    </script>
+    </script> -->
   </head>
   <body class="bg-[#DED9D3] text-[#242425] min-h-screen flex flex-col">
     <%- include('../partials/admin/admin-header') %>
