@@ -15,17 +15,20 @@ const errorHandler = require('./middlewares/errorHandler');
 const setLocals = require('./middlewares/locals');
 const globalSettings = require('./middlewares/setting.middleware');
 const { requireAuth } = require('./middlewares/auth.middleware');
+const { rateLimiter } = require('./middlewares/ratelimiter');
+const settings = require('./config/settings');
+const logger = require('./utils/logger');
 
 i18n.configure({
   locales: ['en', 'he'],
   directory: path.join(__dirname, './../locales'),
-  defaultLocale: 'he',
-  cookie: 'lang', // optional
+  defaultLocale: settings.locale.default,
+  cookie: settings.locale.cookie,
   autoReload: true,
   syncFiles: false,
   updateFiles: false,
   logErrorFn: function (msg) {
-    console.error('i18n error:', msg);
+    logger.error('i18n error:', msg);
   },
   objectNotation: true,
 });
@@ -64,6 +67,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  '/admin-files',
+  requireAuth,
+  express.static(path.join(__dirname, 'protected_assets'))
+);
 app.use(cookieParser());
 app.use(i18n.init);
 
@@ -97,6 +105,7 @@ const productRoutes = require('./routes/product.routes');
 // --- 3. Routes ---
 app.use(require('./middlewares/lang'));
 app.use(globalSettings);
+app.use(rateLimiter);
 app.use('/', require('./routes/meta.routes'));
 app.use('/', require('./routes/lang.routes'));
 app.use('/', homeRoutes);
@@ -106,12 +115,6 @@ app.use('/products', productRoutes);
 app.use('/admin', require('./routes/auth.routes'));
 app.use('/admin', require('./routes/admin.routes'));
 app.use('/admin', require('./routes/settings.routes'));
-
-app.use(
-  '/admin-files',
-  requireAuth,
-  express.static(path.join(__dirname, 'protected_assets'))
-);
 
 // --- 4. Error Handling ---
 // 404 Handler
