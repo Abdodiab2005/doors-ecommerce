@@ -3,8 +3,12 @@ const router = express.Router();
 const adminController = require("../controllers/admin.controller");
 const upload = require("../middlewares/upload");
 const { requireAuth } = require("../middlewares/auth.middleware");
+const { apiLimiter } = require("../middlewares/rateLimiter");
 
 router.use(requireAuth);
+
+// Apply API rate limiting to all admin API routes
+router.use('/api', apiLimiter);
 
 // 🧩 جهّز حقول الألوان الديناميكية (لحد 10 ألوان مثلاً)
 const colorFields = Array.from({ length: 10 }, (_, i) => ({

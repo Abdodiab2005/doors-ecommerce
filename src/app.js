@@ -9,21 +9,26 @@ const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo');
 const i18n = require('i18n');
 
-// استيراد الـ Handlers من ملفاتهم
+// Import centralized settings
+const settings = require('./config/settings');
+
+// Import handlers and middlewares
 const notFoundHandler = require('./middlewares/notFound');
 const errorHandler = require('./middlewares/errorHandler');
 const setLocals = require('./middlewares/locals');
 const globalSettings = require('./middlewares/setting.middleware');
 const { requireAuth } = require('./middlewares/auth.middleware');
+const { generalLimiter } = require('./middlewares/rateLimiter');
 
+// Configure i18n using centralized settings
 i18n.configure({
-  locales: ['en', 'he'],
+  locales: settings.i18n.locales,
   directory: path.join(__dirname, './../locales'),
-  defaultLocale: 'he',
-  cookie: 'lang', // optional
-  autoReload: true,
-  syncFiles: false,
-  updateFiles: false,
+  defaultLocale: settings.i18n.defaultLocale,
+  cookie: settings.i18n.cookie,
+  autoReload: settings.i18n.autoReload,
+  syncFiles: settings.i18n.syncFiles,
+  updateFiles: settings.i18n.updateFiles,
   logErrorFn: function (msg) {
     console.error('i18n error:', msg);
   },
@@ -33,54 +38,50 @@ i18n.configure({
 const app = express();
 
 // --- 1. Middlewares ---
+// Security headers
 app.use(
   helmet({
-    contentSecurityPolicy: {
-      directives: {
-        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        'img-src': [
-          "'self'",
-          'data:',
-          'loremflickr.com',
-          'via.placeholder.com',
-          'picsum.photos',
-          'fastly.picsum.photos',
-          'blob:',
-        ],
-        'script-src': [
-          "'self'",
-          "'unsafe-inline'",
-          'cdn.jsdelivr.net',
-          'cdn.tailwindcss.com',
-          "'unsafe-eval'",
-        ],
-        connectSrc: ["'self'", 'https://cdn.jsdelivr.net'],
-      },
-    },
+    contentSecurityPolicy: settings.security.contentSecurityPolicy,
   })
 );
 app.use(cors());
+
+// Rate limiting - apply to all routes
+app.use(generalLimiter);
+
+// Body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan('dev'));
+
+// Logging
+app.use(morgan(settings.logging.format));
+
+// Static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Cookie parser
 app.use(cookieParser());
+
+// i18n
 app.use(i18n.init);
 
-app.set('trust proxy', 1); // لازم قبل تعريف الـ session
+// Trust proxy for rate limiting and sessions
+app.set('trust proxy', settings.server.trustProxy);
+
+// Session configuration - MUST have SESSION_SECRET set
+if (!settings.session.secret) {
+  throw new Error('SESSION_SECRET must be set in environment variables');
+}
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'verysecretkey',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 1000 * 60 * 60 * 24, // يوم كامل
-    },
+    secret: settings.session.secret,
+    name: settings.session.name,
+    resave: settings.session.resave,
+    saveUninitialized: settings.session.saveUninitialized,
+    cookie: settings.session.cookie,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
+      mongoUrl: settings.database.uri,
     }),
   })
 );
