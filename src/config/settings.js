@@ -36,7 +36,7 @@ module.exports = {
     locales: ['en', 'he'],
     defaultLocale: process.env.DEFAULT_LOCALE || 'he',
     cookie: 'lang',
-    cookieMaxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    cookieMaxAge: 180 * 24 * 60 * 60 * 1000, // 180 days
     autoReload: process.env.NODE_ENV === 'development',
     syncFiles: false,
     updateFiles: false,
@@ -74,7 +74,14 @@ module.exports = {
   // File Upload Configuration
   upload: {
     maxFileSize: parseInt(process.env.MAX_FILE_SIZE || '2097152', 10), // 2MB default
-    allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/svg+xml', 'image/x-icon'],
+    allowedMimeTypes: [
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/webp',
+      'image/svg+xml',
+      'image/x-icon',
+    ],
     allowedExtensions: ['jpeg', 'jpg', 'png', 'webp', 'svg', 'ico'],
   },
 
@@ -112,7 +119,12 @@ module.exports = {
           'cdn.tailwindcss.com',
         ],
         connectSrc: ["'self'", 'https://cdn.jsdelivr.net'],
-        styleSrc: ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'cdn.tailwindcss.com'],
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          'cdn.jsdelivr.net',
+          'cdn.tailwindcss.com',
+        ],
       },
     },
   },

@@ -2,6 +2,7 @@
 // Cache middleware using node-cache (in-memory)
 const cache = require('../utils/cache');
 const logger = require('../utils/logger');
+const { success } = require('../utils/response');
 
 /**
  * Cache middleware - caches response data in memory
@@ -25,7 +26,7 @@ function cacheMiddleware(ttl = null, keyGenerator = null) {
       const cachedData = cache.get(cacheKey);
 
       if (cachedData) {
-        return res.status(200).json(cachedData);
+        return success(res, 'Data Fetched successfully', cachedData);
       }
 
       // Store original res.json function
