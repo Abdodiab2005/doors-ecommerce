@@ -6,7 +6,7 @@ module.exports = {
   server: {
     port: process.env.PORT || 3000,
     env: process.env.NODE_ENV || 'development',
-    trustProxy: true,
+    trustProxy: 1,
   },
 
   // Database Configuration
@@ -117,6 +117,7 @@ module.exports = {
           "'unsafe-eval'",
           'cdn.jsdelivr.net',
           'cdn.tailwindcss.com',
+          'cdnjs.cloudflare.com', // أضف ده
         ],
         connectSrc: ["'self'", 'https://cdn.jsdelivr.net'],
         styleSrc: [
@@ -124,6 +125,7 @@ module.exports = {
           "'unsafe-inline'",
           'cdn.jsdelivr.net',
           'cdn.tailwindcss.com',
+          'cdnjs.cloudflare.com',
         ],
       },
     },
