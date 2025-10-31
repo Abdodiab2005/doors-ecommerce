@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "daisyui";
 
 /* Content sources - paths relative to this CSS file */
@@ -6,54 +6,47 @@
 @source "../js/**/*.js";
 @source "../../protected_assets/js/**/*.js";
 
-/* Custom Theme - Tailwind v4 way */
+/* Custom Theme - Only non-color variables */
 @theme {
-  /* Custom Colors */
-  --color-primary: #242425;
-  --color-secondary: #aca59b;
-  --color-accent: #ded9d3;
-  --color-base-100: #ded9d3;
-  --color-base-200: #aca59b;
-  --color-neutral-100: #ffffff;
-  --color-neutral-200: #aca59b;
-  --color-neutral-400: #8f877e;
-  --color-neutral-800: #242425;
-
   /* Additional Screen */
   --breakpoint-xs: 425px;
 }
 
-/* DaisyUI Custom Theme Override */
+/* DaisyUI Custom Theme - Define colors ONLY here */
 @layer base {
   :root {
-    /* DaisyUI Color Variables - Custom Theme */
-    --color-primary: oklch(14.5% 0.006 285.885);       /* #242425 - Dark Gray */
-    --color-secondary: oklch(70.3% 0.015 70.334);      /* #ACA59B - Taupe */
-    --color-accent: oklch(88.2% 0.012 71.717);         /* #DED9D3 - Light Beige */
-    --color-base-100: oklch(88.2% 0.012 71.717);       /* #DED9D3 */
-    --color-base-200: oklch(70.3% 0.015 70.334);       /* #ACA59B */
-    --color-base-300: oklch(61.2% 0.013 66.063);       /* #8F877E */
-    --color-base-content: oklch(14.5% 0.006 285.885);  /* #242425 */
-    --color-neutral: oklch(14.5% 0.006 285.885);       /* #242425 */
-    --color-neutral-content: oklch(100% 0 0);          /* #FFFFFF */
-    --color-info: oklch(64% 0.042 207.5);              /* #5F9EA0 */
-    --color-success: oklch(67% 0.103 155.5);           /* #3CB371 */
-    --color-warning: oklch(75% 0.133 84.5);            /* #DAA520 */
-    --color-error: oklch(46% 0.166 25.5);              /* #B22222 */
-    --color-primary-content: oklch(100% 0 0);          /* White on primary */
-    --color-secondary-content: oklch(14.5% 0.006 285.885);  /* Dark on secondary */
-    --color-accent-content: oklch(14.5% 0.006 285.885);     /* Dark on accent */
-    --color-info-content: oklch(100% 0 0);             /* White on info */
-    --color-success-content: oklch(100% 0 0);          /* White on success */
-    --color-warning-content: oklch(14.5% 0.006 285.885);    /* Dark on warning */
-    --color-error-content: oklch(100% 0 0);            /* White on error */
+    /* Force custom theme - properly achromatic colors */
+    --color-primary: oklch(14.5% 0 0) !important; /* #242425 - True dark grey (no hue) */
+    --color-secondary: oklch(70.3% 0.015 70) !important; /* #ACA59B - Taupe */
+    --color-accent: oklch(88.2% 0.012 72) !important; /* #DED9D3 - Light Beige */
+    --color-base-100: oklch(88.2% 0.012 72) !important; /* #DED9D3 */
+    --color-base-200: oklch(70.3% 0.015 70) !important; /* #ACA59B */
+    --color-base-300: oklch(61.2% 0.013 66) !important; /* #8F877E */
+    --color-base-content: oklch(14.5% 0 0) !important; /* #242425 - True dark grey */
+    --color-neutral: oklch(14.5% 0 0) !important; /* #242425 */
+    --color-neutral-content: oklch(100% 0 0) !important; /* #FFFFFF */
+
+    /* Status colors */
+    --color-info: oklch(64% 0.042 207.5) !important; /* #5F9EA0 */
+    --color-success: oklch(67% 0.103 155.5) !important; /* #3CB371 */
+    --color-warning: oklch(75% 0.133 84.5) !important; /* #DAA520 */
+    --color-error: oklch(46% 0.166 25.5) !important; /* #B22222 */
+
+    /* Content colors */
+    --color-primary-content: oklch(100% 0 0) !important; /* White on primary */
+    --color-secondary-content: oklch(14.5% 0 0) !important; /* Dark on secondary */
+    --color-accent-content: oklch(14.5% 0 0) !important; /* Dark on accent */
+    --color-info-content: oklch(100% 0 0) !important; /* White on info */
+    --color-success-content: oklch(100% 0 0) !important; /* White on success */
+    --color-warning-content: oklch(14.5% 0 0) !important; /* Dark on warning */
+    --color-error-content: oklch(100% 0 0) !important; /* White on error */
   }
 
   html {
     direction: ltr;
   }
 
-  html[dir="rtl"] {
+  html[dir='rtl'] {
     direction: rtl;
   }
 }
